@@ -1,4 +1,6 @@
-﻿namespace MotoFlow.Domain.Entities
+﻿using MotoFlow.Domain.Enums;
+
+namespace MotoFlow.Domain.Entities
 {
     public class Member
     {
@@ -9,6 +11,8 @@
         public string Email { get; private set; }
 
         public string PhoneNumber { get; private set; }
+
+        public object Status { get; set; }
 
         public DateTime JoinDate { get; private set; }
 
@@ -31,6 +35,7 @@
             Name = name;
             Email = email;
             PhoneNumber = phoneNumber;
+            Status = MemberStatus.Active;
             JoinDate = DateTime.UtcNow;
         }
     }
