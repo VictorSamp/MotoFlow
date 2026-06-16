@@ -22,7 +22,7 @@ namespace MotoFlow.Tests.Domain.Entities
             member.PhoneNumber.Should().Be(phoneNumber);
             member.Status.Should().Be(MemberStatus.Active);
             member.JoinDate.Should().BeCloseTo(DateTime.UtcNow, TimeSpan.FromSeconds(5));
-            //member.CurrentPatchLevel.Should().Be(PatchLevel.Prospect);
+            member.CurrentPatchLevel.Should().Be(PatchLevel.None);
         }
 
         [Theory]

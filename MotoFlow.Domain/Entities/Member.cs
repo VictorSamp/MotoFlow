@@ -12,13 +12,11 @@ namespace MotoFlow.Domain.Entities
 
         public string PhoneNumber { get; private set; }
 
-        public object Status { get; set; }
-
         public DateTime JoinDate { get; private set; }
 
-        //public PatchLevel CurrentPatchLevel { get; private set; }
+        // public PatchLevel CurrentPatchLevel { get; private set; }
 
-        //public MemberStatus Status { get; private set; }
+        public MemberStatus Status { get; private set; }
 
         public Member(string name, string email, string phoneNumber)
         {
@@ -35,8 +33,8 @@ namespace MotoFlow.Domain.Entities
             Name = name;
             Email = email;
             PhoneNumber = phoneNumber;
-            Status = MemberStatus.Active;
             JoinDate = DateTime.UtcNow;
+            Status = MemberStatus.Active;
         }
     }
 }
