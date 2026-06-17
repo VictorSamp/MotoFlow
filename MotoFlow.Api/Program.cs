@@ -1,17 +1,19 @@
 using Microsoft.EntityFrameworkCore;
+using MotoFlow.Application.Members.ActivateMember;
 using MotoFlow.Application.Members.CreateMember;
+using MotoFlow.Application.Members.DeleteMember;
 using MotoFlow.Application.Members.GetAllMembers;
 using MotoFlow.Application.Members.GetMemberById;
 using MotoFlow.Application.Members.Interfaces;
+using MotoFlow.Application.Members.UpdateMember;
 using MotoFlow.Infrastructure.Data;
 using MotoFlow.Infrastructure.Persistence.Repositories;
+using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -21,6 +23,9 @@ builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IGetAllMembersUseCase, GetAllMembersUseCase>();
 builder.Services.AddScoped<IGetMemberByIdUseCase, GetMemberByIdUseCase>();
 builder.Services.AddScoped<ICreateMemberUseCase, CreateMemberUseCase>();
+builder.Services.AddScoped<IUpdateMemberUseCase, UpdateMemberUseCase>();
+builder.Services.AddScoped<IDeleteMemberUseCase, DeleteMemberUseCase>();
+builder.Services.AddScoped<IActivateMemberUseCase, ActivateMemberUseCase>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
 

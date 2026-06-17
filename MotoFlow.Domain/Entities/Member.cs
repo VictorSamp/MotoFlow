@@ -37,5 +37,28 @@ namespace MotoFlow.Domain.Entities
             Status = MemberStatus.Active;
             CurrentPatchLevel = PatchLevel.None;
         }
+
+        public void Update(string name, string phoneNumber, PatchLevel patchLevel)
+        {
+            Name = name;
+            PhoneNumber = phoneNumber;
+            CurrentPatchLevel = patchLevel;
+        }
+
+        public void Activate()
+        {
+            if (Status == MemberStatus.Active)
+                throw new InvalidOperationException("Member already active.");
+
+            Status = MemberStatus.Active;
+        }
+
+        public void Deactivate()
+        {
+            if (Status == MemberStatus.Inactive)
+                throw new InvalidOperationException("Member already inactive.");
+
+            Status = MemberStatus.Inactive;
+        }
     }
 }

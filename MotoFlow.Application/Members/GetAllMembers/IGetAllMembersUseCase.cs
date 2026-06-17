@@ -4,6 +4,6 @@ namespace MotoFlow.Application.Members.GetAllMembers
 {
     public interface IGetAllMembersUseCase
     {
-        public Task<IEnumerable<Member>> Execute(CancellationToken cancellationToken);
+        Task<IEnumerable<Member>> Execute(CancellationToken cancellationToken);
     }
 }

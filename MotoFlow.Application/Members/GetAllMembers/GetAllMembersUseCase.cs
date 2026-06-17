@@ -14,7 +14,7 @@ namespace MotoFlow.Application.Members.GetAllMembers
 
         public async Task<IEnumerable<Member>> Execute(CancellationToken cancellationToken)
         {
-            return await _memberRepository.GetAll(cancellationToken);
+            return await _memberRepository.GetAllAsync(cancellationToken);
         }
     }
 }

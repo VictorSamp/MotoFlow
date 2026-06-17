@@ -17,7 +17,7 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Member>> GetAll(CancellationToken cancellationToken)
+        public async Task<IEnumerable<Member>> GetAllAsync(CancellationToken cancellationToken)
         {
             return await _context.Members.ToListAsync(cancellationToken);
         }
@@ -30,7 +30,16 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
         public async Task AddAsync(Member member, CancellationToken cancellationToken)
         {
             await _context.Members.AddAsync(member, cancellationToken);
-            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            return _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken)
+        {
+            return _context.Members.AnyAsync(m => m.Email == email, cancellationToken);
         }
     }
 }

@@ -2,7 +2,7 @@
 {
     public enum MemberStatus
     {
-        Active = 1, 
-        Inactive = 2
+        Inactive = 0,
+        Active = 1
     }
 }
