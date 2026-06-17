@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MotoFlow.Application.Members.CreateMember;
+using MotoFlow.Application.Members.GetAllMembers;
+using MotoFlow.Application.Members.GetMemberById;
 using MotoFlow.Application.Members.Interfaces;
 using MotoFlow.Infrastructure.Data;
 using MotoFlow.Infrastructure.Persistence.Repositories;
@@ -16,6 +18,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IGetAllMembersUseCase, GetAllMembersUseCase>();
+builder.Services.AddScoped<IGetMemberByIdUseCase, GetMemberByIdUseCase>();
 builder.Services.AddScoped<ICreateMemberUseCase, CreateMemberUseCase>();
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");

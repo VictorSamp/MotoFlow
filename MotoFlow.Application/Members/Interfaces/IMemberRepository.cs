@@ -4,6 +4,8 @@ namespace MotoFlow.Application.Members.Interfaces
 {
     public interface IMemberRepository
     {
-        public Task AddAsync(Member member, CancellationToken cancellationToken);
+        Task<IEnumerable<Member>> GetAll(CancellationToken cancellationToken);
+        Task<Member?> GetByIdAsync(Guid guid, CancellationToken cancellationToken);
+        Task AddAsync(Member member, CancellationToken cancellationToken);
     }
 }
