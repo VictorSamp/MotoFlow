@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".env" />
+    <File Path="docker-compose.yml" />
+  </Folder>
   <Project Path="MotoFlow.Api/MotoFlow.Api.csproj" />
   <Project Path="MotoFlow.Application/MotoFlow.Application.csproj" />
   <Project Path="MotoFlow.Domain/MotoFlow.Domain.csproj" />

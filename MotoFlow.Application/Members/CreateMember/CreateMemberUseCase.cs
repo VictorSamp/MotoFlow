@@ -12,14 +12,14 @@ namespace MotoFlow.Application.Members.CreateMember
             _memberRepository = memberRepository;
         }
 
-        public async Task Execute(CreateMemberRequest request)
+        public async Task Execute(CreateMemberRequest request, CancellationToken cancellationToken)
         {
             var member = new Member(request.Name,
                 request.Email,
                 request.PhoneNumber
             );
 
-            await _memberRepository.AddAsync(member);
+            await _memberRepository.AddAsync(member, cancellationToken);
         }
     }
 }

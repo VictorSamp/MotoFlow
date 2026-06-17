@@ -16,9 +16,9 @@ namespace MotoFlow.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMember([FromBody] CreateMemberRequest request)
+        public async Task<IActionResult> CreateMember([FromBody] CreateMemberRequest request, CancellationToken cancellationToken)
         {
-            await _useCase.Execute(request);
+            await _useCase.Execute(request, cancellationToken);
 
             return NoContent();
         }

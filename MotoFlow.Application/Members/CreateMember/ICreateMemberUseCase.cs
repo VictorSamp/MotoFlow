@@ -2,6 +2,6 @@
 {
     public interface ICreateMemberUseCase
     {
-        Task Execute(CreateMemberRequest request);
+        Task Execute(CreateMemberRequest request, CancellationToken cancellationToken);
     }
 }

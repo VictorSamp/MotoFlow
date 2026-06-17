@@ -13,9 +13,10 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public Task AddAsync(Member member)
+        public async Task AddAsync(Member member, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await _context.Members.AddAsync(member, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }
