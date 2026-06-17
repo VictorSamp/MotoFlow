@@ -7,11 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-<<<<<<< HEAD
     <ProjectReference Include="..\MotoFlow.Domain\MotoFlow.Domain.csproj" />
-=======
-    <Folder Include="Members\DTOs\" />
->>>>>>> 724aacb525862458c5dd4f696fa4f756fdce9688
   </ItemGroup>
 
 </Project>

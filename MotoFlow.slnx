@@ -1,9 +1,6 @@
 <Solution>
   <Project Path="MotoFlow.Api/MotoFlow.Api.csproj" />
-<<<<<<< HEAD
   <Project Path="MotoFlow.Application/MotoFlow.Application.csproj" />
-=======
->>>>>>> 724aacb525862458c5dd4f696fa4f756fdce9688
   <Project Path="MotoFlow.Domain/MotoFlow.Domain.csproj" />
   <Project Path="MotoFlow.Infrastructure/MotoFlow.Infrastructure.csproj" />
   <Project Path="MotoFlow.Tests/MotoFlow.Tests.csproj" />
