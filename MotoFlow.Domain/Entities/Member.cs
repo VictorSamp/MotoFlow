@@ -14,7 +14,7 @@ namespace MotoFlow.Domain.Entities
 
         public DateTime JoinDate { get; private set; }
 
-        // public PatchLevel CurrentPatchLevel { get; private set; }
+        public PatchLevel CurrentPatchLevel { get; private set; }
 
         public MemberStatus Status { get; private set; }
 
@@ -35,6 +35,7 @@ namespace MotoFlow.Domain.Entities
             PhoneNumber = phoneNumber;
             JoinDate = DateTime.UtcNow;
             Status = MemberStatus.Active;
+            CurrentPatchLevel = PatchLevel.None;
         }
     }
 }
