@@ -7,10 +7,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+<<<<<<< HEAD
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="10.0.9" />
   </ItemGroup>
 
   <ItemGroup>
+=======
+>>>>>>> 724aacb525862458c5dd4f696fa4f756fdce9688
     <ProjectReference Include="..\MotoFlow.Application\MotoFlow.Application.csproj" />
   </ItemGroup>
 
