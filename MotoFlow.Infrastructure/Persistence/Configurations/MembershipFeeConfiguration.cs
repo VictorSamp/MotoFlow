@@ -20,6 +20,11 @@ namespace MotoFlow.Infrastructure.Persistence.Configurations
                 .WithMany(x => x.MembershipFees)
                 .HasForeignKey(x => x.MemberId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasIndex(x => new { 
+                x.MemberId,
+                x.ReferencePeriod
+            }).IsUnique();
         }
     }
 }

@@ -20,6 +20,16 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             await _context.MembershipFees.AddAsync(membershipFee, cancellationToken);
         }
 
+        public async Task<bool> ExistsForMemberAndPeriodAsync(Guid memberId, DateTime referencePeriod, CancellationToken cancellationToken)
+        {
+            return await _context.MembershipFees
+                .AnyAsync(x =>
+                    x.MemberId == memberId &&
+                    x.ReferencePeriod.Month == referencePeriod.Month &&
+                    x.ReferencePeriod.Year == referencePeriod.Year &&
+                    !x.IsDeleted, cancellationToken);
+        }
+
         public async Task<MembershipFee> GetByIdOrThrowAsync(Guid memberGuid, Guid feeGuid, CancellationToken cancellationToken)
         {
             return await _context.MembershipFees

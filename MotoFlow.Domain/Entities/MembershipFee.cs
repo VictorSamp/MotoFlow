@@ -34,10 +34,15 @@ namespace MotoFlow.Domain.Entities
         {
             Id = Guid.NewGuid();
             MemberId = memberId;
-            ReferencePeriod = referencePeriod;
+
             Amount = amount;
             Status = MembershipFeeStatus.Pending;
             IsDeleted = false;
+
+            ReferencePeriod = new DateTime(
+                referencePeriod.Year,
+                referencePeriod.Month,
+                1, 0, 0, 0, DateTimeKind.Utc);
         }
 
         public void Delete()
