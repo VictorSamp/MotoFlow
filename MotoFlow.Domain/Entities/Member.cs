@@ -18,6 +18,8 @@ namespace MotoFlow.Domain.Entities
 
         public MemberStatus Status { get; private set; }
 
+        public List<MembershipFee> MembershipFees { get; private set; }
+
         public Member(string name, string email, string phoneNumber)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -36,6 +38,7 @@ namespace MotoFlow.Domain.Entities
             JoinDate = DateTime.UtcNow;
             Status = MemberStatus.Active;
             CurrentPatchLevel = PatchLevel.None;
+            MembershipFees = [];
         }
 
         public void Update(string name, string phoneNumber, PatchLevel patchLevel)
