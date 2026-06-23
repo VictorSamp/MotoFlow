@@ -1,12 +1,11 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.AspNetCore.Mvc;
 using MotoFlow.Application.Commom.Exceptions;
 using MotoFlow.Application.Members.ActivateMember;
 using MotoFlow.Application.Members.CreateMember;
 using MotoFlow.Application.Members.DeleteMember;
 using MotoFlow.Application.Members.GetAllMembers;
 using MotoFlow.Application.Members.GetMemberById;
+using MotoFlow.Application.Members.GetMemberDetails;
 using MotoFlow.Application.Members.UpdateMember;
 
 namespace MotoFlow.Api.Controllers
@@ -21,13 +20,15 @@ namespace MotoFlow.Api.Controllers
         private readonly IUpdateMemberUseCase _updateUseCase;
         private readonly IDeleteMemberUseCase _deleteUseCase;
         private readonly IActivateMemberUseCase _activateMemberUseCase;
+        private readonly IGetMemberDetailsUseCase _getMemberDetailsUseCase;
 
         public MembersController(IGetAllMembersUseCase getAllUseCase,
             IGetMemberByIdUseCase getByIdUseCase,
             ICreateMemberUseCase createUseCase,
             IUpdateMemberUseCase updateUseCase,
             IDeleteMemberUseCase deleteUseCase,
-            IActivateMemberUseCase activateMemberUseCase)
+            IActivateMemberUseCase activateMemberUseCase,
+            IGetMemberDetailsUseCase getMemberDetailsUseCase)
         {
             _getAllUseCase = getAllUseCase;
             _getByIdUseCase = getByIdUseCase;
@@ -35,6 +36,7 @@ namespace MotoFlow.Api.Controllers
             _updateUseCase = updateUseCase;
             _deleteUseCase = deleteUseCase;
             _activateMemberUseCase = activateMemberUseCase;
+            _getMemberDetailsUseCase = getMemberDetailsUseCase;
         }
 
         [HttpGet]
@@ -52,6 +54,25 @@ namespace MotoFlow.Api.Controllers
             try
             {
                 var result = await _getByIdUseCase.Execute(id, cancellationToken);
+                return Ok(result);
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet]
+        [Route("{id}/details")]
+        public async Task<IActionResult> GetMemberDetails([FromRoute] string id, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var result = await _getMemberDetailsUseCase.ExecuteAsync(id, cancellationToken);
                 return Ok(result);
             }
             catch (NotFoundException ex)

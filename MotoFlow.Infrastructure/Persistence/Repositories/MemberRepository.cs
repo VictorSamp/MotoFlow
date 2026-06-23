@@ -1,7 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using MotoFlow.Application.Members.Interfaces;
 using MotoFlow.Domain.Entities;
 using MotoFlow.Infrastructure.Data;
@@ -22,9 +19,16 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             return await _context.Members.ToListAsync(cancellationToken);
         }
 
-        public async Task<Member?> GetByIdAsync(Guid guid, CancellationToken cancellationToken)
+        public async Task<Member?> GetByIdAsync(Guid memberId, CancellationToken cancellationToken)
         {
-            return await _context.Members.FindAsync([guid], cancellationToken);
+            return await _context.Members.FindAsync([memberId], cancellationToken);
+        }
+
+        public async Task<Member?> GetDetailsByIdAsync(Guid memberId, CancellationToken cancellationToken)
+        {
+            return await _context.Members
+                .Include(x => x.MembershipFees)
+                .FirstOrDefaultAsync(x => x.Id == memberId, cancellationToken);
         }
 
         public async Task AddAsync(Member member, CancellationToken cancellationToken)

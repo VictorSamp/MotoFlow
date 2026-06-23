@@ -3,6 +3,7 @@ using MotoFlow.Application.Commom.Exceptions;
 using MotoFlow.Application.MembershipFees.CreateMembershipFee;
 using MotoFlow.Application.MembershipFees.DeleteMembershipFee;
 using MotoFlow.Application.MembershipFees.GetMembershipFeeById;
+using MotoFlow.Application.MembershipFees.PayMembershipFee;
 
 namespace MotoFlow.Api.Controllers
 {
@@ -13,14 +14,17 @@ namespace MotoFlow.Api.Controllers
         private readonly IGetMembershipFeeByIdUseCase _getMembershipFeeByIdUseCase;
         private readonly ICreateMembershipFeeUseCase _createMembershipFeeUseCase;
         private readonly IDeleteMembershipFeeUseCase _deleteMembershipFeeUseCase;
+        private readonly IPayMembershipFeeUseCase _payMembershipFeeUseCase;
 
         public MembershipFeesController(IGetMembershipFeeByIdUseCase getMembershipFeeByIdUseCase,
             ICreateMembershipFeeUseCase createMembershipFeeUseCase,
-            IDeleteMembershipFeeUseCase deleteMembershipFeeUseCase)
+            IDeleteMembershipFeeUseCase deleteMembershipFeeUseCase,
+            IPayMembershipFeeUseCase payMembershipFeeUseCase)
         {
             _getMembershipFeeByIdUseCase = getMembershipFeeByIdUseCase;
             _createMembershipFeeUseCase = createMembershipFeeUseCase;
             _deleteMembershipFeeUseCase = deleteMembershipFeeUseCase;
+            _payMembershipFeeUseCase = payMembershipFeeUseCase;
         }
 
         [HttpGet]
@@ -62,6 +66,17 @@ namespace MotoFlow.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPatch("{feeId}/pay")]
+        public async Task<IActionResult> Pay(string memberId, string feeId, CancellationToken cancellationToken)
+        {
+            await _payMembershipFeeUseCase.ExecuteAsync(
+                memberId,
+                feeId,
+                cancellationToken);
+
+            return NoContent();
         }
 
         [HttpDelete]

@@ -50,8 +50,24 @@ namespace MotoFlow.Domain.Entities
             if (IsDeleted)
                 return;
 
+            if (Status == MembershipFeeStatus.Paid)
+                throw new InvalidOperationException(
+                    "Paid fees cannot be deleted.");
+
             IsDeleted = true;
             DeletedAt = DateTime.UtcNow;
+        }
+
+        public void Pay()
+        {
+            if (IsDeleted)
+                throw new InvalidOperationException("Cannot pay a deleted fee.");
+
+            if (Status == MembershipFeeStatus.Paid)
+                throw new InvalidOperationException("Fee is already paid.");
+
+            Status = MembershipFeeStatus.Paid;
+            PaymentDate = DateTime.UtcNow;
         }
     }
 }

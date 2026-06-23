@@ -4,12 +4,14 @@ using MotoFlow.Application.Members.CreateMember;
 using MotoFlow.Application.Members.DeleteMember;
 using MotoFlow.Application.Members.GetAllMembers;
 using MotoFlow.Application.Members.GetMemberById;
+using MotoFlow.Application.Members.GetMemberDetails;
 using MotoFlow.Application.Members.Interfaces;
 using MotoFlow.Application.Members.UpdateMember;
 using MotoFlow.Application.MembershipFees.CreateMembershipFee;
 using MotoFlow.Application.MembershipFees.DeleteMembershipFee;
 using MotoFlow.Application.MembershipFees.GetMembershipFeeById;
 using MotoFlow.Application.MembershipFees.Interfaces;
+using MotoFlow.Application.MembershipFees.PayMembershipFee;
 using MotoFlow.Infrastructure.Data;
 using MotoFlow.Infrastructure.Persistence.Repositories;
 using System.Text.Json.Serialization;
@@ -38,12 +40,14 @@ builder.Services.AddScoped<ICreateMemberUseCase, CreateMemberUseCase>();
 builder.Services.AddScoped<IUpdateMemberUseCase, UpdateMemberUseCase>();
 builder.Services.AddScoped<IDeleteMemberUseCase, DeleteMemberUseCase>();
 builder.Services.AddScoped<IActivateMemberUseCase, ActivateMemberUseCase>();
+builder.Services.AddScoped<IGetMemberDetailsUseCase, GetMemberDetailsUseCase>();
 
 // Membership fee services
 builder.Services.AddScoped<IMembershipFeeRepository, MembershipFeeRepository>();
 builder.Services.AddScoped<IGetMembershipFeeByIdUseCase, GetMembershipFeeByIdUseCase>();
 builder.Services.AddScoped<ICreateMembershipFeeUseCase, CreateMembershipFeeUseCase>();
 builder.Services.AddScoped<IDeleteMembershipFeeUseCase, DeleteMembershipFeeUseCase>();
+builder.Services.AddScoped<IPayMembershipFeeUseCase, PayMembershipFeeUseCase>();
 
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");
