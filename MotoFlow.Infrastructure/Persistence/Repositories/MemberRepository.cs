@@ -14,9 +14,11 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             _context = context;
         }
 
-        public async Task<IEnumerable<Member>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<List<Member>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await _context.Members.ToListAsync(cancellationToken);
+            return await _context.Members
+                .AsNoTracking()
+                .ToListAsync(cancellationToken);
         }
 
         public async Task<Member?> GetByIdAsync(Guid memberId, CancellationToken cancellationToken)

@@ -1,9 +1,7 @@
-﻿using MotoFlow.Domain.Entities;
-
-namespace MotoFlow.Application.Members.GetAllMembers
+﻿namespace MotoFlow.Application.Members.GetAllMembers
 {
     public interface IGetAllMembersUseCase
     {
-        Task<IEnumerable<Member>> Execute(CancellationToken cancellationToken);
+        Task<List<MemberDto>> Execute(CancellationToken cancellationToken);
     }
 }

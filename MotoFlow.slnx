@@ -8,4 +8,5 @@
   <Project Path="MotoFlow.Domain/MotoFlow.Domain.csproj" />
   <Project Path="MotoFlow.Infrastructure/MotoFlow.Infrastructure.csproj" />
   <Project Path="MotoFlow.Tests/MotoFlow.Tests.csproj" />
+  <Project Path="MotoFlow.Web/MotoFlow.Web.csproj" Id="be62c0a8-5ead-49f4-993c-6b16ae52b689" />
 </Solution>
