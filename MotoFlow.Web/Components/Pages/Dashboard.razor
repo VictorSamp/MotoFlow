@@ -1,0 +1,209 @@
+﻿@page "/dashboard/"
+
+@using MotoFlow.Domain.Enums
+@inject MemberApiService MemberService
+
+<PageTitle>Dashboard</PageTitle>
+
+<div class="container-fluid mt-4">
+
+    <h2 class="mb-1">Dashboard</h2>
+    <p class="text-muted mb-4">
+        Bem-vindo ao MotoFlow. Abaixo estão os principais indicadores do motoclube.
+    </p>
+
+    @if (members is null)
+    {
+        <div class="text-center mt-5">
+            <div class="spinner-border text-primary"></div>
+            <p class="mt-3">Carregando informações...</p>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4 mb-4">
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted">Total de Membros</h6>
+                        <h2>@members.Count</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted">Membros Ativos</h6>
+                        <h2 class="text-success">@ActiveMembers</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted">Membros Inativos</h6>
+                        <h2 class="text-danger">@InactiveMembers</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0">
+                    <div class="card-body">
+                        <h6 class="text-muted">Níveis de Insígnia</h6>
+                        <h2>@PatchLevelsUsed</h2>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-6 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-header bg-dark text-white">
+                        Distribuição por Insígnia
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-striped mb-0">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Insígnia</th>
+                                    <th class="text-end">Quantidade</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var item in PatchDistribution)
+                                {
+                                    <tr>
+                                        <td>@TranslatePatch(item.Key)</td>
+                                        <td class="text-end">@item.Value</td>
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="col-lg-6 mb-4">
+
+                <div class="card shadow-sm h-100">
+
+                    <div class="card-header bg-dark text-white">
+                        Membros Cadastrados
+                    </div>
+
+                    <div class="card-body">
+
+                        <table class="table table-hover mb-0">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>Insígnia</th>
+                                    <th>Status</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                @foreach (var member in members.Take(5))
+                                {
+                                    <tr>
+
+                                        <td>@member.Name</td>
+
+                                        <td>@TranslatePatch(member.CurrentPatchLevel)</td>
+
+                                        <td>
+
+                                            @if (member.Status == MemberStatus.Active)
+                                            {
+                                                <span class="badge bg-success">Ativo</span>
+                                            }
+                                            else
+                                            {
+                                                <span class="badge bg-danger">Inativo</span>
+                                            }
+
+                                        </td>
+
+                                    </tr>
+                                }
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@code {
+
+    private List<MemberDto>? members;
+
+    private int ActiveMembers =>
+        members?.Count(x => x.Status == MemberStatus.Active) ?? 0;
+
+    private int InactiveMembers =>
+        members?.Count(x => x.Status == MemberStatus.Inactive) ?? 0;
+
+    private int PatchLevelsUsed =>
+        members?
+            .Select(x => x.CurrentPatchLevel)
+            .Distinct()
+            .Count() ?? 0;
+
+    private Dictionary<PatchLevel, int> PatchDistribution =>
+        members?
+            .GroupBy(x => x.CurrentPatchLevel)
+            .ToDictionary(x => x.Key, x => x.Count())
+        ?? new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        members = await MemberService.GetAllMembers();
+    }
+
+    private static string TranslatePatch(PatchLevel level)
+    {
+        return level switch
+        {
+            PatchLevel.None => "Nenhuma Parte",
+            PatchLevel.FirstPatch => "Primeira Etapa",
+            PatchLevel.SecondPatch => "Segunda Etapa",
+            PatchLevel.FullPatch => "Insignia Completa",
+            _ => level.ToString()
+        };
+    }
+
+}

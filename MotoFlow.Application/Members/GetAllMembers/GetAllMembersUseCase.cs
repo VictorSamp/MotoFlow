@@ -1,5 +1,4 @@
-﻿using MotoFlow.Application.Members.Dtos;
-using MotoFlow.Application.Members.Interfaces;
+﻿using MotoFlow.Application.Members.Interfaces;
 namespace MotoFlow.Application.Members.GetAllMembers
 {
     public class GetAllMembersUseCase : IGetAllMembersUseCase
@@ -16,11 +15,13 @@ namespace MotoFlow.Application.Members.GetAllMembers
             var members = await _memberRepository.GetAllAsync(cancellationToken);
 
             return [.. members.Select(x => new MemberDto{
+                Id = x.Id,
                 Name = x.Name,
                 Email = x.Email,
                 PhoneNumber = x.PhoneNumber,
                 JoinDate = x.JoinDate,
-                CurrentPatchLevel = x.CurrentPatchLevel })
+                CurrentPatchLevel = x.CurrentPatchLevel,
+                Status = x.Status})
             ];
         }
     }

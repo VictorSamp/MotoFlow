@@ -2,6 +2,6 @@
 {
     public interface IActivateMemberUseCase
     {
-        Task Execute(string id, CancellationToken cancellationToken);
+        Task Execute(Guid id, CancellationToken cancellationToken);
     }
 }

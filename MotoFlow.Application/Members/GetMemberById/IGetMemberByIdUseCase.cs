@@ -4,6 +4,6 @@ namespace MotoFlow.Application.Members.GetMemberById
 {
     public interface IGetMemberByIdUseCase
     {
-        Task<Member> Execute(string id, CancellationToken cancellationToken);
+        Task<Member> Execute(Guid id, CancellationToken cancellationToken);
     }
 }

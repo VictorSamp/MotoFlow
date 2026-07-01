@@ -2,6 +2,6 @@
 {
     public interface IUpdateMemberUseCase
     {
-        Task Execute(string id, UpdateMemberRequest body, CancellationToken cancellationToken);
+        Task Execute(Guid id, UpdateMemberRequest body, CancellationToken cancellationToken);
     }
 }

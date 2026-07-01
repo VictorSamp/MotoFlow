@@ -13,12 +13,9 @@ namespace MotoFlow.Application.Members.GetMemberById
             _memberRepository = memberRepository;
         }
 
-        public async Task<Member> Execute(string id, CancellationToken cancellationToken)
+        public async Task<Member> Execute(Guid id, CancellationToken cancellationToken)
         {
-            if (!Guid.TryParse(id, out var guid))
-                throw new BadRequestException("Invalid member ID format.");
-
-            return await _memberRepository.GetByIdAsync(guid, cancellationToken)
+            return await _memberRepository.GetByIdAsync(id, cancellationToken)
                 ?? throw new NotFoundException($"Member ID {id} not found.");
         }
     }

@@ -1,0 +1,62 @@
+﻿@page "/members/{Id:guid}"
+@inject MemberApiService MemberService
+
+<h3>Informações do Membro</h3>
+
+@if (member is null)
+{
+    <p>Carregando...</p>
+}
+else
+{
+    <div>
+        <p><b>Nome:</b> @member.Name</p>
+        <p><b>Email:</b> @member.Email</p>
+        <p><b>Telefone:</b> @member.PhoneNumber</p>
+        <p><b>Nível da Insígnia:</b> @member.CurrentPatchLevel</p>
+        <p><b>Data de Ingresso:</b> @member.JoinDate</p>
+
+        <hr />
+
+        <h4>Mensalidades</h4>
+
+        @if (member.Fees is null || !member.Fees.Any())
+        {
+            <p>Nenhuma mensalidade encontrada.</p>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Valor</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var fee in member.Fees)
+                    {
+                        <tr>
+                            <td>@fee.Amount</td>
+                            <td>@fee.Status</td>
+                            <td>@fee.ReferencePeriod.ToString("dd/MM/yyyy")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private MemberDto? member;
+
+    protected override async Task OnInitializedAsync()
+    {
+        member = await MemberService.GetMemberById(Id);
+    }
+}

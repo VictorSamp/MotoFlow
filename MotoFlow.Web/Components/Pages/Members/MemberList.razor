@@ -1,10 +1,15 @@
-﻿
-@page "/members"
-@inject MemberApiService MemberApiService
+﻿@page "/members"
+@inject MemberApiService MemberService
+@inject NavigationManager Nav
+@rendermode InteractiveServer
 
 <h3>Membros</h3>
 
-@if (members == null)
+<button class="btn btn-success mb-3" @onclick="Create">
+    + Adicionar Membro
+</button>
+
+@if (members is null)
 {
     <p>Carregando...</p>
 }
@@ -14,14 +19,14 @@ else if (!members.Any())
 }
 else
 {
-    <table class="table">
-        <thead>
+    <table class="table table-striped align-middle">
+        <thead class="table-dark">
             <tr>
                 <th>Nome</th>
-                <th>Email</th>
                 <th>Telefone</th>
-                <th>Data de ingresso</th>
-                <th>Nivel da insignia</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Opções</th>
             </tr>
         </thead>
 
@@ -30,21 +35,102 @@ else
             {
                 <tr>
                     <td>@m.Name</td>
-                    <td>@m.Email</td>
                     <td>@m.PhoneNumber</td>
-                    <td>@m.JoinDate.ToShortDateString()</td>
-                    <td>@m.CurrentPatchLevel</td>
+                    <td>@m.Email</td>
+                    <td>
+                        @if (m.Status.ToString() == "Active")
+                        {
+                            <span class="badge bg-success">Ativo</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Inativo</span>
+                        }
+                    </td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button class="btn btn-sm btn-info" @onclick="() => Details(m.Id)">Detalhes</button>
+                            <button class="btn btn-sm btn-warning" @onclick="() => Edit(m.Id)">Alterar</button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => OpenDeleteModal(m.Id)">Remover</button>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 }
 
+@if (showDeleteModal)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar exclusão</h5>
+                </div>
+
+                <div class="modal-body">
+                    <p>Tem certeza que deseja excluir este membro?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary"
+                            @onclick="CloseDeleteModal">
+                        Cancelar
+                    </button>
+
+                    <button class="btn btn-danger"
+                            @onclick="ConfirmDelete">
+                        Sim, excluir
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+
 @code {
     private List<MemberDto>? members;
 
+    private bool showDeleteModal = false;
+    private Guid selectedMemberId;
+
     protected override async Task OnInitializedAsync()
     {
-        members = await MemberApiService.GetAllMembers();
+        members = await MemberService.GetAllMembers();
+    }
+
+    private void Create()
+        => Nav.NavigateTo("/members/new");
+
+    private void Edit(Guid id)
+        => Nav.NavigateTo($"/members/edit/{id}");
+
+    private void Details(Guid id)
+        => Nav.NavigateTo($"/members/{id}");
+
+    private void OpenDeleteModal(Guid id)
+    {
+        selectedMemberId = id;
+        showDeleteModal = true;
+    }
+
+    private void CloseDeleteModal()
+    {
+        showDeleteModal = false;
+        selectedMemberId = Guid.Empty;
+    }
+
+    private async Task ConfirmDelete()
+    {
+        await MemberService.DeleteMember(selectedMemberId);
+
+        members = await MemberService.GetAllMembers();
+
+        CloseDeleteModal();
     }
 }

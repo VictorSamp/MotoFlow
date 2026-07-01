@@ -49,7 +49,7 @@ namespace MotoFlow.Api.Controllers
 
         [HttpGet]
         [Route("{id}")]
-        public async Task<IActionResult> GetMemberById([FromRoute] string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetMemberById([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace MotoFlow.Api.Controllers
 
         [HttpGet]
         [Route("{id}/details")]
-        public async Task<IActionResult> GetMemberDetails([FromRoute] string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> GetMemberDetails([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             try
             {
@@ -102,7 +102,7 @@ namespace MotoFlow.Api.Controllers
 
         [HttpPatch]
         [Route("{id}")]
-        public async Task<IActionResult> UpdateMember([FromRoute] string id, [FromBody] UpdateMemberRequest request, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateMember([FromRoute] Guid id, [FromBody] UpdateMemberRequest request, CancellationToken cancellationToken)
         {
             try
             {
@@ -122,7 +122,7 @@ namespace MotoFlow.Api.Controllers
 
         [HttpPatch]
         [Route("{id}/activate")]
-        public async Task<IActionResult> ActivateMember([FromRoute] string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> ActivateMember([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             try
             {
@@ -142,7 +142,7 @@ namespace MotoFlow.Api.Controllers
 
         [HttpDelete]
         [Route("{id}")]
-        public async Task<IActionResult> DeleteMember([FromRoute] string id, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteMember([FromRoute] Guid id, CancellationToken cancellationToken)
         {
             try
             {

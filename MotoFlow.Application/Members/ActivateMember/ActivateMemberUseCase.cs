@@ -1,6 +1,5 @@
 ﻿using MotoFlow.Application.Commom.Exceptions;
 using MotoFlow.Application.Members.Interfaces;
-using MotoFlow.Domain.Enums;
 
 namespace MotoFlow.Application.Members.ActivateMember
 {
@@ -13,12 +12,9 @@ namespace MotoFlow.Application.Members.ActivateMember
             _memberRepository = memberRepository;
         }
 
-        public async Task Execute(string id, CancellationToken cancellationToken)
+        public async Task Execute(Guid id, CancellationToken cancellationToken)
         {
-            if (!Guid.TryParse(id, out var guid))
-                throw new BadRequestException("Invalid ID format");
-
-            var member = await _memberRepository.GetByIdAsync(guid, cancellationToken)
+            var member = await _memberRepository.GetByIdAsync(id, cancellationToken)
                 ?? throw new NotFoundException($"Member ID {id} not found.");
 
             member.Activate();

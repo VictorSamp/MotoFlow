@@ -14,12 +14,10 @@ namespace MotoFlow.Application.Members.GetMemberDetails
             _memberRepository = memberRepository;
         }
 
-        public async Task<MemberDetailsDto> ExecuteAsync(string memberId, CancellationToken cancellationToken)
+        public async Task<MemberDetailsDto> ExecuteAsync(Guid memberId, CancellationToken cancellationToken)
         {
-            var memberGuid = Guid.Parse(memberId);
-
             var member = await _memberRepository
-                .GetDetailsByIdAsync(memberGuid, cancellationToken);
+                .GetDetailsByIdAsync(memberId, cancellationToken);
 
             return member is null
                 ? throw new NotFoundException($"Member ID {memberId} not found.")
@@ -28,9 +26,12 @@ namespace MotoFlow.Application.Members.GetMemberDetails
                     Id = member.Id,
                     Name = member.Name,
                     Email = member.Email,
+                    PhoneNumber = member.PhoneNumber,
+                    JoinDate = member.JoinDate,
+                    CurrentPatchLevel = member.CurrentPatchLevel,
                     Status = member.Status,
                     MembershipFees = [.. member.MembershipFees
-                        .Where(x => x.MemberId == memberGuid)
+                        .Where(x => x.MemberId == memberId)
                         .OrderBy(x => x.ReferencePeriod)
                         .Select(x => new MembershipFeeDto
                         {
