@@ -1,3 +1,5 @@
+using Microsoft.EntityFrameworkCore;
+using MotoFlow.Infrastructure.Data;
 using MotoFlow.Web.Components;
 using System.Text.Json.Serialization;
 
@@ -19,6 +21,12 @@ builder.Services.AddHttpClient("MotoFlowApi", client =>
 {
     client.BaseAddress = new Uri("http://localhost:8080/");
 });
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection")
+    )
+);
 
 var app = builder.Build();
 

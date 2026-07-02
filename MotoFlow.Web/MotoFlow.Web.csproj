@@ -8,8 +8,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.9">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\MotoFlow.Application\MotoFlow.Application.csproj" />
     <ProjectReference Include="..\MotoFlow.Domain\MotoFlow.Domain.csproj" />
+	<ProjectReference Include="..\MotoFlow.Infrastructure\MotoFlow.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
