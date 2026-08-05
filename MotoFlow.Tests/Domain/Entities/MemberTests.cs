@@ -69,5 +69,52 @@ namespace MotoFlow.Tests.Domain.Entities
             action.Should().Throw<ArgumentException>()
                 .WithMessage("Phone number cannot be null or empty.");
         }
+
+        [Theory]
+        [InlineData(PatchLevel.None)]
+        [InlineData(PatchLevel.FirstPatch)]
+        [InlineData(PatchLevel.SecondPatch)]
+        [InlineData(PatchLevel.FullPatch)]
+        public void Should_Update_Patch_Level_When_Member_Is_Active(PatchLevel patchLevel)
+        {
+            var name = "Victor Sampaio";
+            var email = "victor@email.com";
+            var phoneNumber = "31999999999";
+            var member = new Member(name, email, phoneNumber);
+
+            member.UpdatePatchLevel(patchLevel);
+
+            member.CurrentPatchLevel.Should().Be(patchLevel);
+        }
+
+        [Fact]
+        public void Should_Throw_Exception_When_Member_Is_Inactive()
+        {
+            var name = "Victor Sampaio";
+            var email = "victor@email.com";
+            var phoneNumber = "31999999999";
+            var member = new Member(name, email, phoneNumber);
+            member.Deactivate();
+
+            Action action = () => member.UpdatePatchLevel(PatchLevel.FirstPatch);
+
+            action.Should().Throw<InvalidOperationException>()
+                .WithMessage("Only active members can have their patch level updated.");
+        }
+
+        [Fact]
+        public void Should_Throw_Exception_When_Patch_Level_Is_Lower_Than_Current_Level()
+        {
+            var name = "Victor Sampaio";
+            var email = "victor@email.com";
+            var phoneNumber = "31999999999";
+            var member = new Member(name, email, phoneNumber);
+            member.UpdatePatchLevel(PatchLevel.FullPatch);
+
+            Action action = () => member.UpdatePatchLevel(PatchLevel.FirstPatch);
+
+            action.Should().Throw<InvalidOperationException>()
+                .WithMessage("Cannot downgrade patch level.");
+        }
     }
 }
