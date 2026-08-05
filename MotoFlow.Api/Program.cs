@@ -7,6 +7,7 @@ using MotoFlow.Application.Members.GetMemberById;
 using MotoFlow.Application.Members.GetMemberDetails;
 using MotoFlow.Application.Members.Interfaces;
 using MotoFlow.Application.Members.UpdateMember;
+using MotoFlow.Application.Members.UpdateMemberPatchLevel;
 using MotoFlow.Application.MembershipFees.CreateMembershipFee;
 using MotoFlow.Application.MembershipFees.DeleteMembershipFee;
 using MotoFlow.Application.MembershipFees.GetMembershipFeeById;
@@ -41,6 +42,7 @@ builder.Services.AddScoped<IUpdateMemberUseCase, UpdateMemberUseCase>();
 builder.Services.AddScoped<IDeleteMemberUseCase, DeleteMemberUseCase>();
 builder.Services.AddScoped<IActivateMemberUseCase, ActivateMemberUseCase>();
 builder.Services.AddScoped<IGetMemberDetailsUseCase, GetMemberDetailsUseCase>();
+builder.Services.AddScoped<IUpdateMemberPatchLevelUseCase, UpdateMemberPatchLevelUseCase>();
 
 // Membership fee services
 builder.Services.AddScoped<IMembershipFeeRepository, MembershipFeeRepository>();

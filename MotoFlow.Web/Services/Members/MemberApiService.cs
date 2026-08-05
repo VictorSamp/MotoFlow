@@ -1,5 +1,6 @@
 ﻿using MotoFlow.Application.Members.CreateMember;
 using MotoFlow.Application.Members.UpdateMember;
+using MotoFlow.Domain.Enums;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -51,6 +52,18 @@ public class MemberApiService
             request);
 
         response.EnsureSuccessStatusCode();
+    }
+
+    public async Task<string?> UpdateMemberPatchLevel(Guid id, PatchLevel patchLevel)
+    {
+        var response = await _http.PatchAsJsonAsync(
+            $"api/members/{id}/progression",
+            patchLevel);
+
+        if (response.IsSuccessStatusCode)
+            return null;
+
+        return await response.Content.ReadAsStringAsync();
     }
 
     public async Task DeleteMember(Guid id)

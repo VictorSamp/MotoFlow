@@ -41,11 +41,10 @@ namespace MotoFlow.Domain.Entities
             MembershipFees = [];
         }
 
-        public void Update(string name, string phoneNumber, PatchLevel patchLevel)
+        public void Update(string name, string phoneNumber)
         {
             Name = name;
             PhoneNumber = phoneNumber;
-            CurrentPatchLevel = patchLevel;
         }
 
         public void Activate()
@@ -62,6 +61,17 @@ namespace MotoFlow.Domain.Entities
                 throw new InvalidOperationException("Member already inactive.");
 
             Status = MemberStatus.Inactive;
+        }
+
+        public void UpdatePatchLevel(PatchLevel patchLevel)
+        {
+            if (Status != MemberStatus.Active)
+                throw new InvalidOperationException("Only active members can have their patch level updated.");
+
+            if (patchLevel < CurrentPatchLevel)
+                throw new InvalidOperationException("Cannot downgrade patch level.");
+
+            CurrentPatchLevel = patchLevel;
         }
     }
 }

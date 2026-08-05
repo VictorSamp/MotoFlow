@@ -1,5 +1,7 @@
 ﻿@page "/members/{Id:guid}"
+@using MotoFlow.Domain.Enums
 @inject MemberApiService MemberService
+@rendermode InteractiveServer
 
 <h3>Informações do Membro</h3>
 
@@ -15,6 +17,31 @@ else
         <p><b>Telefone:</b> @member.PhoneNumber</p>
         <p><b>Nível da Insígnia:</b> @member.CurrentPatchLevel</p>
         <p><b>Data de Ingresso:</b> @member.JoinDate</p>
+
+        @if (progressionError is not null)
+        {
+            <div class="alert alert-danger">@progressionError</div>
+        }
+
+        @if (member.Status == MemberStatus.Active && AvailablePatchLevels.Any())
+        {
+            <div class="mb-4">
+                <label class="form-label">Progredir nível da insígnia</label>
+                <div class="d-flex gap-2">
+                    <InputSelect class="form-select" @bind-Value="selectedPatchLevel">
+                        @foreach (var level in AvailablePatchLevels)
+                        {
+                            <option value="@level">@level</option>
+                        }
+                    </InputSelect>
+                    <button type="button" class="btn btn-primary" @onclick="ProgressMember">Progredir</button>
+                </div>
+            </div>
+        }
+        else if (member.Status == MemberStatus.Active)
+        {
+            <p class="text-muted">O membro já possui a insígnia completa.</p>
+        }
 
         <hr />
 
@@ -54,9 +81,30 @@ else
     [Parameter] public Guid Id { get; set; }
 
     private MemberDto? member;
+    private PatchLevel selectedPatchLevel;
+    private string? progressionError;
+
+    private IEnumerable<PatchLevel> AvailablePatchLevels =>
+        Enum.GetValues<PatchLevel>()
+            .Where(level => member is not null && level > member.CurrentPatchLevel);
 
     protected override async Task OnInitializedAsync()
     {
         member = await MemberService.GetMemberById(Id);
+        selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
+    }
+
+    private async Task ProgressMember()
+    {
+        if (member is null)
+            return;
+
+        progressionError = await MemberService.UpdateMemberPatchLevel(member.Id, selectedPatchLevel);
+
+        if (progressionError is not null)
+            return;
+
+        member = await MemberService.GetMemberById(Id);
+        selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
     }
 }

@@ -17,7 +17,7 @@ namespace MotoFlow.Application.Members.UpdateMember
             var member = await _memberRepository.GetByIdAsync(id, cancellationToken)
                 ?? throw new NotFoundException($"Member ID {id} not found.");
 
-            member.Update(body.Name, body.PhoneNumber, body.PatchLevel);
+            member.Update(body.Name, body.PhoneNumber);
 
             await _memberRepository.SaveChangesAsync(cancellationToken);
         }

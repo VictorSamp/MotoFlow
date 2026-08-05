@@ -56,21 +56,6 @@
                                 <ValidationMessage For="@(() => model.PhoneNumber)" />
                             </div>
 
-                            <div class="mb-4">
-                                <label class="form-label">Nível da Insígnia</label>
-
-                                <InputSelect class="form-select"
-                                             @bind-Value="model.CurrentPatchLevel">
-
-                                    @foreach (var level in Enum.GetValues<PatchLevel>())
-                                    {
-                                        <option value="@level">@level</option>
-                                    }
-
-                                </InputSelect>
-
-                            </div>
-
                             <div class="d-flex justify-content-end gap-2">
 
                                 <button type="button"
@@ -116,8 +101,7 @@
             {
                 Id = member.Id,
                 Name = member.Name,
-                PhoneNumber = member.PhoneNumber,
-                CurrentPatchLevel = member.CurrentPatchLevel
+                PhoneNumber = member.PhoneNumber
             };
         }
     }
@@ -129,8 +113,7 @@
 
         var request = new UpdateMemberRequest(
             model.Name,
-            model.PhoneNumber,
-            model.CurrentPatchLevel);
+            model.PhoneNumber);
 
         await MemberService.UpdateMember(Id, request);
 

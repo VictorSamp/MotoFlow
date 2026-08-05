@@ -7,6 +7,8 @@ using MotoFlow.Application.Members.GetAllMembers;
 using MotoFlow.Application.Members.GetMemberById;
 using MotoFlow.Application.Members.GetMemberDetails;
 using MotoFlow.Application.Members.UpdateMember;
+using MotoFlow.Application.Members.UpdateMemberPatchLevel;
+using MotoFlow.Domain.Enums;
 
 namespace MotoFlow.Api.Controllers
 {
@@ -21,6 +23,7 @@ namespace MotoFlow.Api.Controllers
         private readonly IDeleteMemberUseCase _deleteUseCase;
         private readonly IActivateMemberUseCase _activateMemberUseCase;
         private readonly IGetMemberDetailsUseCase _getMemberDetailsUseCase;
+        private readonly IUpdateMemberPatchLevelUseCase _updateMemberPatchLevelUseCase;
 
         public MembersController(IGetAllMembersUseCase getAllUseCase,
             IGetMemberByIdUseCase getByIdUseCase,
@@ -28,7 +31,8 @@ namespace MotoFlow.Api.Controllers
             IUpdateMemberUseCase updateUseCase,
             IDeleteMemberUseCase deleteUseCase,
             IActivateMemberUseCase activateMemberUseCase,
-            IGetMemberDetailsUseCase getMemberDetailsUseCase)
+            IGetMemberDetailsUseCase getMemberDetailsUseCase,
+            IUpdateMemberPatchLevelUseCase updateMemberPatchLevelUseCase)
         {
             _getAllUseCase = getAllUseCase;
             _getByIdUseCase = getByIdUseCase;
@@ -37,6 +41,7 @@ namespace MotoFlow.Api.Controllers
             _deleteUseCase = deleteUseCase;
             _activateMemberUseCase = activateMemberUseCase;
             _getMemberDetailsUseCase = getMemberDetailsUseCase;
+            _updateMemberPatchLevelUseCase = updateMemberPatchLevelUseCase;
         }
 
         [HttpGet]
@@ -130,6 +135,26 @@ namespace MotoFlow.Api.Controllers
 
                 return NoContent();
             }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPatch]
+        [Route("{id}/progression")]
+        public async Task<IActionResult> UpdateMemberPatchLevel([FromRoute] Guid id, [FromBody] PatchLevel patchLevel,CancellationToken cancellationToken)
+        {
+            try
+            {
+                await _updateMemberPatchLevelUseCase.Execute(id, patchLevel, cancellationToken);
+
+                return NoContent();
+            } 
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
