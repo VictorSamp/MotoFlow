@@ -1,4 +1,5 @@
 ﻿using MotoFlow.Application.Commom.Exceptions;
+using MotoFlow.Application.Commom.Interfaces;
 using MotoFlow.Application.Members.Interfaces;
 
 namespace MotoFlow.Application.Members.UpdateMember
@@ -6,10 +7,12 @@ namespace MotoFlow.Application.Members.UpdateMember
     public class UpdateMemberUseCase : IUpdateMemberUseCase
     {
         private readonly IMemberRepository _memberRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public UpdateMemberUseCase(IMemberRepository memberRepository)
+        public UpdateMemberUseCase(IMemberRepository memberRepository, IUnitOfWork unitOfWork)
         {
             _memberRepository = memberRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task Execute(Guid id, UpdateMemberRequest body, CancellationToken cancellationToken)
@@ -19,7 +22,7 @@ namespace MotoFlow.Application.Members.UpdateMember
 
             member.Update(body.Name, body.PhoneNumber);
 
-            await _memberRepository.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

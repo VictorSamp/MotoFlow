@@ -1,14 +1,17 @@
-﻿using MotoFlow.Application.MembershipFees.Interfaces;
+﻿using MotoFlow.Application.Commom.Interfaces;
+using MotoFlow.Application.MembershipFees.Interfaces;
 
 namespace MotoFlow.Application.MembershipFees.PayMembershipFee
 {
     public class PayMembershipFeeUseCase : IPayMembershipFeeUseCase
     {
         private readonly IMembershipFeeRepository _membershipFeeRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public PayMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository)
+        public PayMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository, IUnitOfWork unitOfWork)
         {
             _membershipFeeRepository = membershipFeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ExecuteAsync(string memberId, string feeId, CancellationToken cancellationToken)
@@ -20,7 +23,7 @@ namespace MotoFlow.Application.MembershipFees.PayMembershipFee
 
             fee.Pay();
 
-            await _membershipFeeRepository.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

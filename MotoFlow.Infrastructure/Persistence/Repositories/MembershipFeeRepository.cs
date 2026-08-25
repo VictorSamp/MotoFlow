@@ -36,10 +36,5 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(mf => mf.MemberId == memberGuid && mf.Id == feeGuid, cancellationToken)
                 ?? throw new NotFoundException($"Membership fee with ID {feeGuid} for member {memberGuid} not found.");
         }
-
-        public Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            return _context.SaveChangesAsync(cancellationToken);
-        }
     }
 }

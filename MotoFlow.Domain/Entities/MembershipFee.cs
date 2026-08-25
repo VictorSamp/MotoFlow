@@ -27,10 +27,7 @@ namespace MotoFlow.Domain.Entities
             
         }
 
-        public MembershipFee(
-            Guid memberId,
-            DateTime referencePeriod,
-            decimal amount)
+        public MembershipFee(Guid memberId, DateTime referencePeriod, decimal amount)
         {
             Id = Guid.NewGuid();
             MemberId = memberId;

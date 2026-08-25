@@ -1,4 +1,5 @@
 ﻿using MotoFlow.Application.Commom.Exceptions;
+using MotoFlow.Application.Commom.Interfaces;
 using MotoFlow.Application.MembershipFees.Interfaces;
 using MotoFlow.Domain.Entities;
 
@@ -7,9 +8,11 @@ namespace MotoFlow.Application.MembershipFees.CreateMembershipFee
     public class CreateMembershipFeeUseCase : ICreateMembershipFeeUseCase
     {
         private readonly IMembershipFeeRepository _membershipFeeRepository;
-        public CreateMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository)
+        private readonly IUnitOfWork _unitOfWork;
+        public CreateMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository, IUnitOfWork unitOfWork)
         {
             _membershipFeeRepository = membershipFeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ExecuteAsync(string memberId, CreateMembershipFeeRequest createMembershipFeeRequest, CancellationToken cancellationToken)
@@ -30,7 +33,7 @@ namespace MotoFlow.Application.MembershipFees.CreateMembershipFee
                 createMembershipFeeRequest.Amount);
 
             await _membershipFeeRepository.AddAsync(fee, cancellationToken);
-            await _membershipFeeRepository.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }

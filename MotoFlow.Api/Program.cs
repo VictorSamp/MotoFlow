@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using MotoFlow.Application.Commom.Interfaces;
 using MotoFlow.Application.Members.ActivateMember;
 using MotoFlow.Application.Members.CreateMember;
 using MotoFlow.Application.Members.DeleteMember;
@@ -14,6 +15,7 @@ using MotoFlow.Application.MembershipFees.GetMembershipFeeById;
 using MotoFlow.Application.MembershipFees.Interfaces;
 using MotoFlow.Application.MembershipFees.PayMembershipFee;
 using MotoFlow.Infrastructure.Data;
+using MotoFlow.Infrastructure.Persistence;
 using MotoFlow.Infrastructure.Persistence.Repositories;
 using System.Text.Json.Serialization;
 
@@ -50,6 +52,8 @@ builder.Services.AddScoped<IGetMembershipFeeByIdUseCase, GetMembershipFeeByIdUse
 builder.Services.AddScoped<ICreateMembershipFeeUseCase, CreateMembershipFeeUseCase>();
 builder.Services.AddScoped<IDeleteMembershipFeeUseCase, DeleteMembershipFeeUseCase>();
 builder.Services.AddScoped<IPayMembershipFeeUseCase, PayMembershipFeeUseCase>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");

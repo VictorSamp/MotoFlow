@@ -38,11 +38,6 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
             await _context.Members.AddAsync(member, cancellationToken);
         }
 
-        public Task SaveChangesAsync(CancellationToken cancellationToken)
-        {
-            return _context.SaveChangesAsync(cancellationToken);
-        }
-
         public Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken)
         {
             return _context.Members.AnyAsync(m => m.Email == email, cancellationToken);

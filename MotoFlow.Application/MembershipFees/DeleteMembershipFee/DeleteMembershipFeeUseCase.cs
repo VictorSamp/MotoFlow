@@ -1,13 +1,17 @@
-﻿using MotoFlow.Application.MembershipFees.Interfaces;
+﻿using MotoFlow.Application.Commom.Interfaces;
+using MotoFlow.Application.MembershipFees.Interfaces;
 
 namespace MotoFlow.Application.MembershipFees.DeleteMembershipFee
 {
     public class DeleteMembershipFeeUseCase : IDeleteMembershipFeeUseCase
     {
         private readonly IMembershipFeeRepository _membershipFeeRepository;
-        public DeleteMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository)
+        private readonly IUnitOfWork _unitOfWork;
+
+        public DeleteMembershipFeeUseCase(IMembershipFeeRepository membershipFeeRepository, IUnitOfWork unitOfWork)
         {
             _membershipFeeRepository = membershipFeeRepository;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task ExecuteAsync(string memberId, string feeId, CancellationToken cancellationToken)
@@ -19,7 +23,7 @@ namespace MotoFlow.Application.MembershipFees.DeleteMembershipFee
 
             fee.Delete();
 
-            await _membershipFeeRepository.SaveChangesAsync(cancellationToken);
+            await _unitOfWork.SaveChangesAsync(cancellationToken);
         }
     }
 }
