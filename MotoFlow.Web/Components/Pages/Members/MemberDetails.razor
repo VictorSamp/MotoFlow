@@ -1,7 +1,10 @@
 ﻿@page "/members/{Id:guid}"
 @using MotoFlow.Domain.Enums
+@using MotoFlow.Application.Members.Dtos
 @inject MemberApiService MemberService
 @rendermode InteractiveServer
+
+@inject MemberApiService MemberService
 
 <h3>Informações do Membro</h3>
 
@@ -27,6 +30,7 @@ else
         {
             <div class="mb-4">
                 <label class="form-label">Progredir nível da insígnia</label>
+
                 <div class="d-flex gap-2">
                     <InputSelect class="form-select" @bind-Value="selectedPatchLevel">
                         @foreach (var level in AvailablePatchLevels)
@@ -34,20 +38,27 @@ else
                             <option value="@level">@level</option>
                         }
                     </InputSelect>
-                    <button type="button" class="btn btn-primary" @onclick="ProgressMember">Progredir</button>
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            @onclick="ProgressMember">
+                        Progredir
+                    </button>
                 </div>
             </div>
         }
         else if (member.Status == MemberStatus.Active)
         {
-            <p class="text-muted">O membro já possui a insígnia completa.</p>
+            <p class="text-muted">
+                O membro já possui a insígnia completa.
+            </p>
         }
 
         <hr />
 
         <h4>Mensalidades</h4>
 
-        @if (member.Fees is null || !member.Fees.Any())
+        @if (member.MembershipFees is null || !member.MembershipFees.Any())
         {
             <p>Nenhuma mensalidade encontrada.</p>
         }
@@ -56,19 +67,34 @@ else
             <table class="table">
                 <thead>
                     <tr>
+                        <th>Competência</th>
                         <th>Valor</th>
                         <th>Status</th>
-                        <th>Data</th>
+                        <th>Data de Pagamento</th>
                     </tr>
                 </thead>
 
                 <tbody>
-                    @foreach (var fee in member.Fees)
+                    @foreach (var fee in member.MembershipFees)
                     {
                         <tr>
-                            <td>@fee.Amount</td>
-                            <td>@fee.Status</td>
-                            <td>@fee.ReferencePeriod.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                @fee.ReferencePeriod.ToString("MM/yyyy")
+                            </td>
+
+                            <td>
+                                @fee.Amount.ToString("C")
+                            </td>
+
+                            <td>
+                                @fee.Status
+                            </td>
+
+                            <td>
+                                @(fee.PaymentDate.HasValue
+                                    ? fee.PaymentDate.Value.ToString("dd/MM/yyyy")
+                                    : "-")
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -78,19 +104,25 @@ else
 }
 
 @code {
-    [Parameter] public Guid Id { get; set; }
+    [Parameter]
+    public Guid Id { get; set; }
 
-    private MemberDto? member;
+    private MemberDetailsDto? member;
+
     private PatchLevel selectedPatchLevel;
+
     private string? progressionError;
 
     private IEnumerable<PatchLevel> AvailablePatchLevels =>
         Enum.GetValues<PatchLevel>()
-            .Where(level => member is not null && level > member.CurrentPatchLevel);
+            .Where(level =>
+                member is not null &&
+                level > member.CurrentPatchLevel);
 
     protected override async Task OnInitializedAsync()
     {
         member = await MemberService.GetMemberById(Id);
+
         selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
     }
 
@@ -99,12 +131,15 @@ else
         if (member is null)
             return;
 
-        progressionError = await MemberService.UpdateMemberPatchLevel(member.Id, selectedPatchLevel);
+        progressionError = await MemberService.UpdateMemberPatchLevel(
+            member.Id,
+            selectedPatchLevel);
 
         if (progressionError is not null)
             return;
 
         member = await MemberService.GetMemberById(Id);
+
         selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using MotoFlow.Application.Members.CreateMember;
+using MotoFlow.Application.Members.Dtos;
 using MotoFlow.Application.Members.UpdateMember;
 using MotoFlow.Domain.Enums;
 using System.Text.Json;
@@ -29,10 +30,10 @@ public class MemberApiService
             _options);
     }
 
-    public async Task<MemberDto?> GetMemberById(Guid id)
+    public async Task<MemberDetailsDto?> GetMemberById(Guid id)
     {
-        return await _http.GetFromJsonAsync<MemberDto>(
-            $"api/members/{id}",
+        return await _http.GetFromJsonAsync<MemberDetailsDto>(
+            $"api/members/{id}/details",
             _options);
     }
 

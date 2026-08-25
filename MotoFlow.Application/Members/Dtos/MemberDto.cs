@@ -1,5 +1,4 @@
-﻿using MotoFlow.Application.MembershipFees.Dtos;
-using MotoFlow.Domain.Enums;
+﻿using MotoFlow.Domain.Enums;
 
 public class MemberDto
 {
@@ -10,5 +9,4 @@ public class MemberDto
     public DateTime JoinDate { get; set; }
     public PatchLevel CurrentPatchLevel { get; set; }
     public MemberStatus Status { get; set; }
-    public List<MembershipFeeDto> Fees { get; set; }
 }
