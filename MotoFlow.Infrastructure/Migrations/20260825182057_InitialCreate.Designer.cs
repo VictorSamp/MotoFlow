@@ -12,8 +12,8 @@ using MotoFlow.Infrastructure.Data;
 namespace MotoFlow.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260622160831_AddMembershipFees")]
-    partial class AddMembershipFees
+    [Migration("20260825182057_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -87,7 +87,8 @@ namespace MotoFlow.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("MemberId");
+                    b.HasIndex("MemberId", "ReferencePeriod")
+                        .IsUnique();
 
                     b.ToTable("MembershipFees");
                 });

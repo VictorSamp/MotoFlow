@@ -31,7 +31,7 @@ namespace MotoFlow.Application.Members.GetMemberDetails
                     CurrentPatchLevel = member.CurrentPatchLevel,
                     Status = member.Status,
                     MembershipFees = [.. member.MembershipFees
-                        .Where(x => x.MemberId == memberId)
+                        .Where(x => x.MemberId == memberId && !x.IsDeleted)
                         .OrderBy(x => x.ReferencePeriod)
                         .Select(x => new MembershipFeeDto
                         {

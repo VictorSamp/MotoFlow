@@ -58,6 +58,10 @@ namespace MotoFlow.Api.Controllers
 
                 return Created();
             }
+            catch (ConflictException ex)
+            {
+                return Conflict(ex.Message);
+            }
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);

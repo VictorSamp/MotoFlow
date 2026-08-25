@@ -1,10 +1,13 @@
 ﻿@page "/members/{Id:guid}"
-@using MotoFlow.Domain.Enums
+
 @using MotoFlow.Application.Members.Dtos
-@inject MemberApiService MemberService
-@rendermode InteractiveServer
+@using MotoFlow.Application.MembershipFees.CreateMembershipFee
+@using MotoFlow.Domain.Enums
 
 @inject MemberApiService MemberService
+@inject MembershipFeeApiService MembershipFeeService
+
+@rendermode InteractiveServer
 
 <h3>Informações do Membro</h3>
 
@@ -23,20 +26,29 @@ else
 
         @if (progressionError is not null)
         {
-            <div class="alert alert-danger">@progressionError</div>
+            <div class="alert alert-danger">
+                @progressionError
+            </div>
         }
 
         @if (member.Status == MemberStatus.Active && AvailablePatchLevels.Any())
         {
             <div class="mb-4">
-                <label class="form-label">Progredir nível da insígnia</label>
+                <label class="form-label">
+                    Progredir nível da insígnia
+                </label>
 
                 <div class="d-flex gap-2">
-                    <InputSelect class="form-select" @bind-Value="selectedPatchLevel">
+                    <InputSelect class="form-select"
+                                 @bind-Value="selectedPatchLevel">
+
                         @foreach (var level in AvailablePatchLevels)
                         {
-                            <option value="@level">@level</option>
+                            <option value="@level">
+                                @level
+                            </option>
                         }
+
                     </InputSelect>
 
                     <button type="button"
@@ -56,7 +68,15 @@ else
 
         <hr />
 
-        <h4>Mensalidades</h4>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h4 class="mb-0">Mensalidades</h4>
+
+            <button type="button"
+                    class="btn btn-success"
+                    @onclick="OpenCreateFeeModal">
+                + Adicionar mensalidade
+            </button>
+        </div>
 
         @if (member.MembershipFees is null || !member.MembershipFees.Any())
         {
@@ -71,6 +91,7 @@ else
                         <th>Valor</th>
                         <th>Status</th>
                         <th>Data de Pagamento</th>
+                        <th>Ações</th>
                     </tr>
                 </thead>
 
@@ -95,6 +116,14 @@ else
                                     ? fee.PaymentDate.Value.ToString("dd/MM/yyyy")
                                     : "-")
                             </td>
+
+                            <td>
+                                <button type="button"
+                                        class="btn btn-sm btn-danger"
+                                        @onclick="() => OpenDeleteFeeModal(fee.Id)">
+                                    Remover
+                                </button>
+                            </td>
                         </tr>
                     }
                 </tbody>
@@ -103,7 +132,158 @@ else
     </div>
 }
 
-@code {
+@if (showCreateFeeModal)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Nova mensalidade
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseCreateFeeModal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    @if (createFeeError is not null)
+                    {
+                        <div class="alert alert-danger">
+                            @createFeeError
+                        </div>
+                    }
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Membro
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               value="@member?.Name"
+                               disabled />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Competência
+                        </label>
+
+                        <input type="month"
+                               class="form-control"
+                               @bind="feeReferencePeriod" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Valor
+                        </label>
+
+                        <input type="number"
+                               class="form-control"
+                               step="0.01"
+                               min="0"
+                               @bind="feeAmount" />
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            @onclick="CloseCreateFeeModal">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-success"
+                            @onclick="CreateFee"
+                            disabled="@isCreatingFee">
+
+                        @if (isCreatingFee)
+                        {
+                            <span>Criando...</span>
+                        }
+                        else
+                        {
+                            <span>Criar</span>
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@if (showDeleteFeeModal)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        Confirmar exclusão
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseDeleteFeeModal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+                    <p>
+                        Tem certeza que deseja remover esta mensalidade?
+                    </p>
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            @onclick="CloseDeleteFeeModal">
+                        Cancelar
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="ConfirmDeleteFee">
+                        Sim, remover
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+@code
+{
     [Parameter]
     public Guid Id { get; set; }
 
@@ -113,6 +293,21 @@ else
 
     private string? progressionError;
 
+    private bool showCreateFeeModal;
+
+    private string? createFeeError;
+
+    private bool isCreatingFee;
+
+    private bool showDeleteFeeModal;
+
+    private Guid selectedFeeId;
+
+    private DateTime feeReferencePeriod =
+        new(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+
+    private decimal feeAmount = 30.00m;
+
     private IEnumerable<PatchLevel> AvailablePatchLevels =>
         Enum.GetValues<PatchLevel>()
             .Where(level =>
@@ -121,9 +316,93 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        member = await MemberService.GetMemberById(Id);
+        await LoadMember();
 
-        selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
+        selectedPatchLevel =
+            AvailablePatchLevels.FirstOrDefault();
+    }
+
+    private async Task LoadMember()
+    {
+        member = await MemberService.GetMemberById(Id);
+    }
+
+    private void OpenCreateFeeModal()
+    {
+        createFeeError = null;
+
+        feeReferencePeriod =
+            new DateTime(
+                DateTime.UtcNow.Year,
+                DateTime.UtcNow.Month,
+                1);
+
+        feeAmount = 30.00m;
+
+        showCreateFeeModal = true;
+    }
+
+    private void CloseCreateFeeModal()
+    {
+        if (isCreatingFee)
+            return;
+
+        showCreateFeeModal = false;
+        createFeeError = null;
+    }
+
+    private async Task CreateFee()
+    {
+        createFeeError = null;
+        isCreatingFee = true;
+
+        try
+        {
+            var request = new CreateMembershipFeeRequest(
+                feeReferencePeriod,
+                feeAmount);
+
+            var error = await MembershipFeeService.CreateMembershipFee(
+                Id,
+                request);
+
+            if (error is not null)
+            {
+                createFeeError = error;
+                return;
+            }
+
+            await LoadMember();
+
+            showCreateFeeModal = false;
+        }
+        finally
+        {
+            isCreatingFee = false;
+        }
+    }
+
+    private void OpenDeleteFeeModal(Guid feeId)
+    {
+        selectedFeeId = feeId;
+        showDeleteFeeModal = true;
+    }
+
+    private void CloseDeleteFeeModal()
+    {
+        showDeleteFeeModal = false;
+        selectedFeeId = Guid.Empty;
+    }
+
+    private async Task ConfirmDeleteFee()
+    {
+        await MembershipFeeService.DeleteMembershipFee(
+            Id,
+            selectedFeeId);
+
+        await LoadMember();
+
+        CloseDeleteFeeModal();
     }
 
     private async Task ProgressMember()
@@ -131,15 +410,17 @@ else
         if (member is null)
             return;
 
-        progressionError = await MemberService.UpdateMemberPatchLevel(
-            member.Id,
-            selectedPatchLevel);
+        progressionError =
+            await MemberService.UpdateMemberPatchLevel(
+                member.Id,
+                selectedPatchLevel);
 
         if (progressionError is not null)
             return;
 
-        member = await MemberService.GetMemberById(Id);
+        await LoadMember();
 
-        selectedPatchLevel = AvailablePatchLevels.FirstOrDefault();
+        selectedPatchLevel =
+            AvailablePatchLevels.FirstOrDefault();
     }
 }

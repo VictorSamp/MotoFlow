@@ -6,11 +6,28 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace MotoFlow.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddMembershipFees : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Members",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    JoinDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CurrentPatchLevel = table.Column<int>(type: "int", nullable: false),
+                    Status = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Members", x => x.Id);
+                });
+
             migrationBuilder.CreateTable(
                 name: "MembershipFees",
                 columns: table => new
@@ -36,9 +53,10 @@ namespace MotoFlow.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_MembershipFees_MemberId",
+                name: "IX_MembershipFees_MemberId_ReferencePeriod",
                 table: "MembershipFees",
-                column: "MemberId");
+                columns: new[] { "MemberId", "ReferencePeriod" },
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -46,6 +64,9 @@ namespace MotoFlow.Infrastructure.Migrations
         {
             migrationBuilder.DropTable(
                 name: "MembershipFees");
+
+            migrationBuilder.DropTable(
+                name: "Members");
         }
     }
 }
