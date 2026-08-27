@@ -1,4 +1,10 @@
 using Microsoft.EntityFrameworkCore;
+using MotoFlow.Application.Activities.CreateActivity;
+using MotoFlow.Application.Activities.DeleteActivity;
+using MotoFlow.Application.Activities.GetActivityById;
+using MotoFlow.Application.Activities.GetAllActivities;
+using MotoFlow.Application.Activities.Interfaces;
+using MotoFlow.Application.Activities.UpdateActivity;
 using MotoFlow.Application.Commom.Interfaces;
 using MotoFlow.Application.Members.ActivateMember;
 using MotoFlow.Application.Members.CreateMember;
@@ -35,7 +41,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Member services
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
 builder.Services.AddScoped<IGetAllMembersUseCase, GetAllMembersUseCase>();
 builder.Services.AddScoped<IGetMemberByIdUseCase, GetMemberByIdUseCase>();
@@ -46,12 +51,18 @@ builder.Services.AddScoped<IActivateMemberUseCase, ActivateMemberUseCase>();
 builder.Services.AddScoped<IGetMemberDetailsUseCase, GetMemberDetailsUseCase>();
 builder.Services.AddScoped<IUpdateMemberPatchLevelUseCase, UpdateMemberPatchLevelUseCase>();
 
-// Membership fee services
 builder.Services.AddScoped<IMembershipFeeRepository, MembershipFeeRepository>();
 builder.Services.AddScoped<IGetMembershipFeeByIdUseCase, GetMembershipFeeByIdUseCase>();
 builder.Services.AddScoped<ICreateMembershipFeeUseCase, CreateMembershipFeeUseCase>();
 builder.Services.AddScoped<IDeleteMembershipFeeUseCase, DeleteMembershipFeeUseCase>();
 builder.Services.AddScoped<IPayMembershipFeeUseCase, PayMembershipFeeUseCase>();
+
+builder.Services.AddScoped<IActivityRepository, ActivityRepository>();
+builder.Services.AddScoped<ICreateActivityUseCase, CreateActivityUseCase>();
+builder.Services.AddScoped<IGetAllActivitiesUseCase, GetAllActivitiesUseCase>();
+builder.Services.AddScoped<IGetActivityByIdUseCase, GetActivityByIdUseCase>();
+builder.Services.AddScoped<IUpdateActivityUseCase, UpdateActivityUseCase>();
+builder.Services.AddScoped<IDeleteActivityUseCase, DeleteActivityUseCase>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 

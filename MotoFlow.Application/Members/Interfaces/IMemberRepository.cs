@@ -9,5 +9,6 @@ namespace MotoFlow.Application.Members.Interfaces
         Task<Member?> GetDetailsByIdAsync(Guid memberId, CancellationToken cancellationToken);
         Task AddAsync(Member member, CancellationToken cancellationToken);
         Task<bool> EmailExistsAsync(string email, CancellationToken cancellationToken);
+        Task<List<Member>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken);
     }
 }

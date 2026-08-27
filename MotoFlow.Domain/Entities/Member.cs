@@ -19,6 +19,7 @@ namespace MotoFlow.Domain.Entities
         public MemberStatus Status { get; private set; }
 
         public List<MembershipFee> MembershipFees { get; private set; }
+        public ICollection<ActivityMember> ActivityMembers { get; private set; } = [];
 
         public Member(string name, string email, string phoneNumber)
         {

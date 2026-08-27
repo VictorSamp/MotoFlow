@@ -42,5 +42,16 @@ namespace MotoFlow.Infrastructure.Persistence.Repositories
         {
             return _context.Members.AnyAsync(m => m.Email == email, cancellationToken);
         }
+
+        public async Task<List<Member>> GetByIdsAsync(IEnumerable<Guid> ids, CancellationToken cancellationToken)
+        {
+            var memberIds = ids
+                .Distinct()
+                .ToList();
+
+            return await _context.Members
+                .Where(x => memberIds.Contains(x.Id))
+                .ToListAsync(cancellationToken);
+        }
     }
 }
