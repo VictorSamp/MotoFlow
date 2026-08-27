@@ -1,0 +1,117 @@
+﻿@page "/activities"
+
+@using Microsoft.JSInterop
+@using MotoFlow.Application.Activities.Dtos
+
+@inject IJSRuntime JS
+@inject ActivityApiService ActivityService
+
+@rendermode InteractiveServer
+
+<PageTitle>Agenda | MotoFlow</PageTitle>
+
+<div class="activity-page">
+
+    <div class="activity-header">
+
+        <div>
+            <h3 class="activity-title">
+                Agenda de Atividades
+            </h3>
+
+            <p class="activity-subtitle">
+                Organize as atividades e responsabilidades do motoclube.
+            </p>
+        </div>
+
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="activity-loading">
+            <div class="spinner-border" role="status">
+                <span class="visually-hidden">
+                    Carregando...
+                </span>
+            </div>
+
+            <span>
+                Carregando agenda...
+            </span>
+        </div>
+    }
+    else if (loadError is not null)
+    {
+        <div class="alert alert-danger" role="alert">
+            <strong>Erro ao carregar a agenda.</strong>
+
+            <div>
+                @loadError
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="calendar-card">
+
+            <div id="activity-calendar"
+                 style="min-height: 700px;">
+            </div>
+
+        </div>
+    }
+
+</div>
+
+@code
+{
+    private bool isLoading = true;
+
+    private string? loadError;
+
+    private IEnumerable<ActivityDto>? activities;
+
+    private bool calendarInitialized;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            activities =
+                await ActivityService.GetAllActivities();
+        }
+        catch (Exception ex)
+        {
+            loadError = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (isLoading)
+            return;
+
+        if (loadError is not null)
+            return;
+
+        if (calendarInitialized)
+            return;
+
+        calendarInitialized = true;
+
+        await JS.InvokeVoidAsync(
+            "motoFlowCalendar.initialize",
+            "activity-calendar");
+
+        if (activities is not null)
+        {
+            await JS.InvokeVoidAsync(
+                "motoFlowCalendar.setActivities",
+                activities);
+        }
+    }
+}

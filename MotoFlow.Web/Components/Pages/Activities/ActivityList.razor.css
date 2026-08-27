@@ -1,0 +1,58 @@
+﻿.activity-page {
+    padding: 1.5rem;
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.activity-title {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+.activity-subtitle {
+    margin: 0.35rem 0 0;
+    color: #6c757d;
+}
+
+.calendar-card {
+    background: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    padding: 1.25rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+#activity-calendar {
+    width: 100%;
+    min-height: 700px;
+}
+
+.activity-loading {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 2rem;
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+
+    .activity-page {
+        padding: 1rem;
+    }
+
+    .calendar-card {
+        padding: 0.5rem;
+        border-radius: 8px;
+    }
+
+    .activity-title {
+        font-size: 1.5rem;
+    }
+}

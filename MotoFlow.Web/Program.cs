@@ -17,6 +17,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddScoped<MemberApiService>();
 builder.Services.AddScoped<MembershipFeeApiService>();
+builder.Services.AddScoped<ActivityApiService>();
 
 builder.Services.AddHttpClient("MotoFlowApi", client =>
 {
