@@ -1,10 +1,13 @@
 ﻿@page "/activities"
 
 @using Microsoft.JSInterop
+@using MotoFlow.Application.Activities.CreateActivity
 @using MotoFlow.Application.Activities.Dtos
+@using MotoFlow.Application.Members.Dtos
 
 @inject IJSRuntime JS
 @inject ActivityApiService ActivityService
+@inject MemberApiService MemberService
 
 @rendermode InteractiveServer
 
@@ -24,30 +27,47 @@
             </p>
         </div>
 
+        <button type="button"
+                class="btn btn-success"
+                @onclick="OpenCreateModal">
+
+            + Nova atividade
+
+        </button>
+
     </div>
 
     @if (isLoading)
     {
         <div class="activity-loading">
-            <div class="spinner-border" role="status">
+
+            <div class="spinner-border"
+                 role="status">
+
                 <span class="visually-hidden">
                     Carregando...
                 </span>
+
             </div>
 
             <span>
                 Carregando agenda...
             </span>
+
         </div>
     }
     else if (loadError is not null)
     {
-        <div class="alert alert-danger" role="alert">
-            <strong>Erro ao carregar a agenda.</strong>
+        <div class="alert alert-danger">
+
+            <strong>
+                Erro ao carregar a agenda.
+            </strong>
 
             <div>
                 @loadError
             </div>
+
         </div>
     }
     else
@@ -63,15 +83,429 @@
 
 </div>
 
+
+@* =========================================================
+   MODAL - CRIAR ATIVIDADE
+   ========================================================= *@
+
+@if (showCreateModal)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Nova atividade
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseCreateModal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    @if (createError is not null)
+                    {
+                        <div class="alert alert-danger">
+                            @createError
+                        </div>
+                    }
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Título
+                        </label>
+
+                        <input type="text"
+                               class="form-control"
+                               @bind="activityTitle" />
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Descrição
+                        </label>
+
+                        <textarea class="form-control"
+                                  rows="3"
+                                  @bind="activityDescription">
+                        </textarea>
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Início
+                            </label>
+
+                            <input type="datetime-local"
+                                   class="form-control"
+                                   @bind="activityStart" />
+
+                        </div>
+
+                        <div class="col-md-6">
+
+                            <label class="form-label">
+                                Fim
+                            </label>
+
+                            <input type="datetime-local"
+                                   class="form-control"
+                                   @bind="activityEnd" />
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3 mt-3">
+
+                        <label class="form-label">
+                            Responsáveis
+                        </label>
+
+                        @if (members is null)
+                        {
+                            <p class="text-muted">
+                                Carregando membros...
+                            </p>
+                        }
+                        else if (!members.Any())
+                        {
+                            <p class="text-muted">
+                                Nenhum membro encontrado.
+                            </p>
+                        }
+                        else
+                        {
+                            <div class="responsible-members">
+
+                                @foreach (var member in members)
+                                {
+                                    <div class="form-check">
+
+                                        <input class="form-check-input"
+                                               type="checkbox"
+                                               checked="@selectedMemberIds.Contains(member.Id)"
+                                               @onchange="e => ToggleMember(member.Id, e)" />
+
+                                        <label class="form-check-label">
+                                            @member.Name
+                                        </label>
+
+                                    </div>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            @onclick="CloseCreateModal"
+                            disabled="@isSaving">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-success"
+                            @onclick="CreateActivity"
+                            disabled="@isSaving">
+
+                        @(isSaving
+                            ? "Criando..."
+                            : "Criar atividade")
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@* =========================================================
+   MODAL - DETALHES DA ATIVIDADE
+   ========================================================= *@
+
+@if (showDetailsModal && selectedActivity is not null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        @selectedActivity.Title
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseDetailsModal"
+                            disabled="@isDeleting">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    @if (deleteError is not null)
+                    {
+                        <div class="alert alert-danger">
+                            @deleteError
+                        </div>
+                    }
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Descrição
+                        </strong>
+
+                        <p class="mt-1">
+                            @(string.IsNullOrWhiteSpace(
+                                selectedActivity.Description)
+                                ? "Nenhuma descrição informada."
+                                : selectedActivity.Description)
+                        </p>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <strong>
+                            Período
+                        </strong>
+
+                        <p class="mt-1 mb-0">
+                            @selectedActivity.StartDate.ToString(
+                                "dd/MM/yyyy HH:mm")
+                        </p>
+
+                        <p class="mb-0">
+                            até
+                            @selectedActivity.EndDate.ToString(
+                                "dd/MM/yyyy HH:mm")
+                        </p>
+
+                    </div>
+
+                    <div>
+
+                        <strong>
+                            Responsáveis
+                        </strong>
+
+                        @if (selectedActivity.Members is null ||
+                             !selectedActivity.Members.Any())
+                        {
+                            <p class="text-muted mt-1">
+                                Nenhum responsável definido.
+                            </p>
+                        }
+                        else
+                        {
+                            <ul class="mt-2">
+
+                                @foreach (var member
+                                    in selectedActivity.Members)
+                                {
+                                    <li>
+                                        @member.MemberName
+                                    </li>
+                                }
+
+                            </ul>
+                        }
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            @onclick="CloseDetailsModal"
+                            disabled="@isDeleting">
+
+                        Fechar
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="OpenDeleteModal"
+                            disabled="@isDeleting">
+
+                        Remover
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+@* =========================================================
+   MODAL - CONFIRMAR EXCLUSÃO
+   ========================================================= *@
+
+@if (showDeleteModal && selectedActivity is not null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Confirmar exclusão
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseDeleteModal"
+                            disabled="@isDeleting">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    @if (deleteError is not null)
+                    {
+                        <div class="alert alert-danger">
+                            @deleteError
+                        </div>
+                    }
+
+                    <p class="mb-0">
+                        Tem certeza que deseja remover a atividade
+                        <strong>
+                            @selectedActivity.Title
+                        </strong>?
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-secondary"
+                            @onclick="CloseDeleteModal"
+                            disabled="@isDeleting">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-danger"
+                            @onclick="ConfirmDeleteActivity"
+                            disabled="@isDeleting">
+
+                        @(isDeleting
+                            ? "Removendo..."
+                            : "Sim, remover")
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
 @code
 {
     private bool isLoading = true;
 
+    private bool calendarInitialized;
+
+    private bool showCreateModal;
+
+    private bool showDetailsModal;
+
+    private bool showDeleteModal;
+
+    private bool isSaving;
+
+    private bool isDeleting;
+
     private string? loadError;
+
+    private string? createError;
+
+    private string? deleteError;
 
     private IEnumerable<ActivityDto>? activities;
 
-    private bool calendarInitialized;
+    private List<MemberDto>? members;
+
+    private ActivityDto? selectedActivity;
+
+    private DotNetObjectReference<ActivityList>? dotNetReference;
+
+    private string activityTitle = string.Empty;
+
+    private string activityDescription = string.Empty;
+
+    private DateTime activityStart =
+        DateTime.Now.Date.AddHours(8);
+
+    private DateTime activityEnd =
+        DateTime.Now.Date.AddHours(9);
+
+    private HashSet<Guid> selectedMemberIds = [];
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,6 +513,9 @@
         {
             activities =
                 await ActivityService.GetAllActivities();
+
+            members =
+                await MemberService.GetAllMembers();
         }
         catch (Exception ex)
         {
@@ -90,7 +527,9 @@
         }
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender)
+
+    protected override async Task OnAfterRenderAsync(
+        bool firstRender)
     {
         if (isLoading)
             return;
@@ -103,15 +542,278 @@
 
         calendarInitialized = true;
 
+        dotNetReference =
+            DotNetObjectReference.Create(this);
+
         await JS.InvokeVoidAsync(
             "motoFlowCalendar.initialize",
-            "activity-calendar");
+            "activity-calendar",
+            dotNetReference);
 
-        if (activities is not null)
+        await RefreshCalendar();
+    }
+
+
+    [JSInvokable]
+    public async Task OnCalendarDateClicked(
+        string date)
+    {
+        if (!DateTime.TryParse(
+                date,
+                out var selectedDate))
         {
-            await JS.InvokeVoidAsync(
-                "motoFlowCalendar.setActivities",
-                activities);
+            return;
         }
+
+        OpenCreateModal(selectedDate);
+
+        await InvokeAsync(
+            StateHasChanged);
+    }
+
+
+    [JSInvokable]
+    public async Task OnCalendarEventClicked(
+        string activityId)
+    {
+        if (!Guid.TryParse(
+                activityId,
+                out var id))
+        {
+            return;
+        }
+
+        deleteError = null;
+
+        selectedActivity =
+            await ActivityService.GetActivityById(id);
+
+        if (selectedActivity is null)
+            return;
+
+        showDetailsModal = true;
+
+        await InvokeAsync(
+            StateHasChanged);
+    }
+
+
+    private void OpenCreateModal()
+    {
+        OpenCreateModal(
+            DateTime.Now.Date);
+    }
+
+
+    private void OpenCreateModal(
+        DateTime date)
+    {
+        createError = null;
+
+        activityTitle =
+            string.Empty;
+
+        activityDescription =
+            string.Empty;
+
+        activityStart =
+            date.Date.AddHours(8);
+
+        activityEnd =
+            date.Date.AddHours(9);
+
+        selectedMemberIds.Clear();
+
+        showCreateModal = true;
+    }
+
+
+    private void CloseCreateModal()
+    {
+        if (isSaving)
+            return;
+
+        showCreateModal = false;
+
+        createError = null;
+    }
+
+
+    private void ToggleMember(
+        Guid memberId,
+        ChangeEventArgs args)
+    {
+        if (args.Value is bool isChecked &&
+            isChecked)
+        {
+            selectedMemberIds.Add(memberId);
+        }
+        else
+        {
+            selectedMemberIds.Remove(memberId);
+        }
+    }
+
+
+    private async Task CreateActivity()
+    {
+        createError = null;
+
+        if (string.IsNullOrWhiteSpace(
+                activityTitle))
+        {
+            createError =
+                "Informe o título da atividade.";
+
+            return;
+        }
+
+        if (activityEnd <= activityStart)
+        {
+            createError =
+                "A data final deve ser posterior à data inicial.";
+
+            return;
+        }
+
+        if (!selectedMemberIds.Any())
+        {
+            createError =
+                "Selecione pelo menos um responsável.";
+
+            return;
+        }
+
+        isSaving = true;
+
+        try
+        {
+            var request =
+                new CreateActivityRequest(
+                    activityTitle,
+                    activityDescription,
+                    activityStart,
+                    activityEnd,
+                    selectedMemberIds.ToList());
+
+            var error =
+                await ActivityService.CreateActivity(
+                    request);
+
+            if (error is not null)
+            {
+                createError = error;
+
+                return;
+            }
+
+            activities =
+                await ActivityService.GetAllActivities();
+
+            showCreateModal = false;
+
+            await RefreshCalendar();
+        }
+        catch (Exception ex)
+        {
+            createError = ex.Message;
+        }
+        finally
+        {
+            isSaving = false;
+        }
+    }
+
+
+    private void CloseDetailsModal()
+    {
+        if (isDeleting)
+            return;
+
+        showDetailsModal = false;
+
+        selectedActivity = null;
+
+        deleteError = null;
+    }
+
+
+    private void OpenDeleteModal()
+    {
+        deleteError = null;
+
+        showDetailsModal = false;
+
+        showDeleteModal = true;
+    }
+
+
+    private void CloseDeleteModal()
+    {
+        if (isDeleting)
+            return;
+
+        showDeleteModal = false;
+
+        deleteError = null;
+    }
+
+
+    private async Task ConfirmDeleteActivity()
+    {
+        if (selectedActivity is null)
+            return;
+
+        deleteError = null;
+
+        isDeleting = true;
+
+        try
+        {
+            var error =
+                await ActivityService.DeleteActivity(
+                    selectedActivity.Id);
+
+            if (error is not null)
+            {
+                deleteError = error;
+
+                return;
+            }
+
+            activities =
+                await ActivityService.GetAllActivities();
+
+            showDeleteModal = false;
+
+            selectedActivity = null;
+
+            await RefreshCalendar();
+        }
+        catch (Exception ex)
+        {
+            deleteError = ex.Message;
+        }
+        finally
+        {
+            isDeleting = false;
+        }
+    }
+
+
+    private async Task RefreshCalendar()
+    {
+        if (!calendarInitialized)
+            return;
+
+        await JS.InvokeVoidAsync(
+            "motoFlowCalendar.setActivities",
+            activities ?? []);
+    }
+
+
+    public void Dispose()
+    {
+        dotNetReference?.Dispose();
     }
 }

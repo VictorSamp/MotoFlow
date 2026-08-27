@@ -2,9 +2,9 @@
 
     calendar: null,
 
-    initialize: function (elementId) {
+    dotNetReference: null,
 
-        console.log("Inicializando FullCalendar...");
+    initialize: function (elementId, dotNetReference) {
 
         const element =
             document.getElementById(elementId);
@@ -24,6 +24,9 @@
 
             return;
         }
+
+        this.dotNetReference =
+            dotNetReference;
 
         if (this.calendar) {
             this.calendar.destroy();
@@ -50,15 +53,20 @@
 
                 headerToolbar: {
                     left: 'prev,next today',
+
                     center: 'title',
+
                     right:
                         'dayGridMonth,timeGridWeek,listWeek'
                 },
 
                 buttonText: {
                     today: 'Hoje',
+
                     month: 'Mês',
+
                     week: 'Semana',
+
                     list: 'Lista'
                 },
 
@@ -66,8 +74,32 @@
 
                 eventTimeFormat: {
                     hour: '2-digit',
+
                     minute: '2-digit',
+
                     hour12: false
+                },
+
+                dateClick: function (info) {
+
+                    window.motoFlowCalendar
+                        .dotNetReference
+                        .invokeMethodAsync(
+                            'OnCalendarDateClicked',
+                            info.dateStr
+                        );
+                },
+
+                eventClick: function (info) {
+
+                    info.jsEvent.preventDefault();
+
+                    window.motoFlowCalendar
+                        .dotNetReference
+                        .invokeMethodAsync(
+                            'OnCalendarEventClicked',
+                            info.event.id
+                        );
                 },
 
                 eventDidMount: function (info) {
@@ -76,6 +108,7 @@
                         info.event.extendedProps.description;
 
                     if (description) {
+
                         info.el.setAttribute(
                             'title',
                             description
@@ -85,20 +118,13 @@
             });
 
         this.calendar.render();
-
-        console.log(
-            "FullCalendar renderizado!"
-        );
     },
+
 
     setActivities: function (activities) {
 
-        console.log(
-            "Atividades recebidas:",
-            activities
-        );
-
         if (!this.calendar) {
+
             console.error(
                 "Calendário ainda não foi inicializado."
             );
@@ -108,10 +134,8 @@
 
         this.calendar.removeAllEvents();
 
-        if (!activities || activities.length === 0) {
-            console.log(
-                "Nenhuma atividade encontrada."
-            );
+        if (!activities ||
+            activities.length === 0) {
 
             return;
         }
@@ -128,6 +152,7 @@
                 end: activity.endDate,
 
                 extendedProps: {
+
                     description:
                         activity.description,
 
@@ -135,11 +160,6 @@
                         activity.members
                 }
             }));
-
-        console.log(
-            "Eventos gerados:",
-            events
-        );
 
         this.calendar.addEventSource(events);
     }
