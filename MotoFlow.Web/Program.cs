@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using MotoFlow.Infrastructure.Data;
 using MotoFlow.Web.Components;
+using MotoFlow.Web.Services;
 using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,6 +21,11 @@ builder.Services.AddScoped<MembershipFeeApiService>();
 builder.Services.AddScoped<ActivityApiService>();
 
 builder.Services.AddHttpClient("MotoFlowApi", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:8080/");
+});
+
+builder.Services.AddHttpClient<DashboardApiService>(client =>
 {
     client.BaseAddress = new Uri("http://localhost:8080/");
 });

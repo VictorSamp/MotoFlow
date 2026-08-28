@@ -6,6 +6,7 @@ using MotoFlow.Application.Activities.GetAllActivities;
 using MotoFlow.Application.Activities.Interfaces;
 using MotoFlow.Application.Activities.UpdateActivity;
 using MotoFlow.Application.Commom.Interfaces;
+using MotoFlow.Application.Dashboard.GetDashboard;
 using MotoFlow.Application.Members.ActivateMember;
 using MotoFlow.Application.Members.CreateMember;
 using MotoFlow.Application.Members.DeleteMember;
@@ -65,6 +66,8 @@ builder.Services.AddScoped<IUpdateActivityUseCase, UpdateActivityUseCase>();
 builder.Services.AddScoped<IDeleteActivityUseCase, DeleteActivityUseCase>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+builder.Services.AddScoped<IGetDashboardUseCase, GetDashboardUseCase>();
 
 
 builder.WebHost.UseUrls("http://0.0.0.0:8080");

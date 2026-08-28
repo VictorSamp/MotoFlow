@@ -1,18 +1,20 @@
-﻿@page "/dashboard/"
+﻿@page "/dashboard"
 
-@using MotoFlow.Domain.Enums
-@inject MemberApiService MemberService
+@using MotoFlow.Web.Components.ViewModels.Dashboard
+@using MotoFlow.Web.Services
+@inject DashboardApiService DashboardService
 
 <PageTitle>Dashboard</PageTitle>
 
 <div class="container-fluid mt-4">
 
     <h2 class="mb-1">Dashboard</h2>
+
     <p class="text-muted mb-4">
         Bem-vindo ao MotoFlow. Abaixo estão os principais indicadores do motoclube.
     </p>
 
-    @if (members is null)
+    @if (dashboard is null)
     {
         <div class="text-center mt-5">
             <div class="spinner-border text-primary"></div>
@@ -27,7 +29,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h6 class="text-muted">Total de Membros</h6>
-                        <h2>@members.Count</h2>
+                        <h2>@dashboard.TotalMembers</h2>
                     </div>
                 </div>
             </div>
@@ -36,7 +38,9 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h6 class="text-muted">Membros Ativos</h6>
-                        <h2 class="text-success">@ActiveMembers</h2>
+                        <h2 class="text-success">
+                            @dashboard.ActiveMembers
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -45,7 +49,9 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h6 class="text-muted">Membros Inativos</h6>
-                        <h2 class="text-danger">@InactiveMembers</h2>
+                        <h2 class="text-danger">
+                            @dashboard.InactiveMembers
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -54,7 +60,7 @@
                 <div class="card shadow-sm border-0">
                     <div class="card-body">
                         <h6 class="text-muted">Níveis de Insígnia</h6>
-                        <h2>@PatchLevelsUsed</h2>
+                        <h2>@dashboard.PatchLevelsUsed</h2>
                     </div>
                 </div>
             </div>
@@ -73,30 +79,42 @@
 
                     <div class="card-body">
 
-                        <table class="table table-striped mb-0">
+                        @if (dashboard.PatchDistribution.Count == 0)
+                        {
+                            <p class="text-muted mb-0">
+                                Nenhuma informação disponível.
+                            </p>
+                        }
+                        else
+                        {
+                            <table class="table table-striped mb-0">
 
-                            <thead>
-
-                                <tr>
-                                    <th>Insígnia</th>
-                                    <th class="text-end">Quantidade</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach (var item in PatchDistribution)
-                                {
+                                <thead>
                                     <tr>
-                                        <td>@TranslatePatch(item.Key)</td>
-                                        <td class="text-end">@item.Value</td>
+                                        <th>Insígnia</th>
+                                        <th class="text-end">Quantidade</th>
                                     </tr>
-                                }
+                                </thead>
 
-                            </tbody>
+                                <tbody>
 
-                        </table>
+                                    @foreach (var item in dashboard.PatchDistribution)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @TranslatePatch(item.Key)
+                                            </td>
+
+                                            <td class="text-end">
+                                                @item.Value
+                                            </td>
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        }
 
                     </div>
 
@@ -114,47 +132,62 @@
 
                     <div class="card-body">
 
-                        <table class="table table-hover mb-0">
+                        @if (dashboard.RecentMembers.Count == 0)
+                        {
+                            <p class="text-muted mb-0">
+                                Nenhum membro cadastrado.
+                            </p>
+                        }
+                        else
+                        {
+                            <table class="table table-hover mb-0">
 
-                            <thead>
-
-                                <tr>
-                                    <th>Nome</th>
-                                    <th>Insígnia</th>
-                                    <th>Status</th>
-                                </tr>
-
-                            </thead>
-
-                            <tbody>
-
-                                @foreach (var member in members.Take(5))
-                                {
+                                <thead>
                                     <tr>
-
-                                        <td>@member.Name</td>
-
-                                        <td>@TranslatePatch(member.CurrentPatchLevel)</td>
-
-                                        <td>
-
-                                            @if (member.Status == MemberStatus.Active)
-                                            {
-                                                <span class="badge bg-success">Ativo</span>
-                                            }
-                                            else
-                                            {
-                                                <span class="badge bg-danger">Inativo</span>
-                                            }
-
-                                        </td>
-
+                                        <th>Nome</th>
+                                        <th>Insígnia</th>
+                                        <th>Status</th>
                                     </tr>
-                                }
+                                </thead>
 
-                            </tbody>
+                                <tbody>
 
-                        </table>
+                                    @foreach (var member in dashboard.RecentMembers)
+                                    {
+                                        <tr>
+
+                                            <td>
+                                                @member.Name
+                                            </td>
+
+                                            <td>
+                                                @TranslatePatch(member.CurrentPatchLevel)
+                                            </td>
+
+                                            <td>
+
+                                                @if (member.Status == "Active")
+                                                {
+                                                    <span class="badge bg-success">
+                                                        Ativo
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-danger">
+                                                        Inativo
+                                                    </span>
+                                                }
+
+                                            </td>
+
+                                        </tr>
+                                    }
+
+                                </tbody>
+
+                            </table>
+                        }
 
                     </div>
 
@@ -169,41 +202,22 @@
 
 @code {
 
-    private List<MemberDto>? members;
-
-    private int ActiveMembers =>
-        members?.Count(x => x.Status == MemberStatus.Active) ?? 0;
-
-    private int InactiveMembers =>
-        members?.Count(x => x.Status == MemberStatus.Inactive) ?? 0;
-
-    private int PatchLevelsUsed =>
-        members?
-            .Select(x => x.CurrentPatchLevel)
-            .Distinct()
-            .Count() ?? 0;
-
-    private Dictionary<PatchLevel, int> PatchDistribution =>
-        members?
-            .GroupBy(x => x.CurrentPatchLevel)
-            .ToDictionary(x => x.Key, x => x.Count())
-        ?? new();
+    private DashboardDto? dashboard;
 
     protected override async Task OnInitializedAsync()
     {
-        members = await MemberService.GetAllMembers();
+        dashboard = await DashboardService.GetDashboard();
     }
 
-    private static string TranslatePatch(PatchLevel level)
+    private static string TranslatePatch(string level)
     {
         return level switch
         {
-            PatchLevel.None => "Nenhuma Parte",
-            PatchLevel.FirstPatch => "Primeira Etapa",
-            PatchLevel.SecondPatch => "Segunda Etapa",
-            PatchLevel.FullPatch => "Insignia Completa",
-            _ => level.ToString()
+            "None" => "Nenhuma Parte",
+            "FirstPatch" => "Primeira Etapa",
+            "SecondPatch" => "Segunda Etapa",
+            "FullPatch" => "Insígnia Completa",
+            _ => level
         };
     }
-
 }
