@@ -1,0 +1,817 @@
+/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.member-details-page {
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.details-header {
+    margin-bottom: 22px;
+}
+
+.breadcrumb-area {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: #9aa1a8;
+    font-size: 10px;
+}
+
+    .breadcrumb-area i {
+        font-size: 8px;
+    }
+
+    .breadcrumb-area .current {
+        color: #6c757d;
+    }
+
+.details-header h1 {
+    margin: 0;
+    color: #212529;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.details-header p {
+    margin: 5px 0 0;
+    color: #7b858e;
+    font-size: 13px;
+}
+
+
+/* =========================================================
+   PERFIL
+   ========================================================= */
+
+.member-profile-card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 118px;
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    background-color: #ffffff;
+    border: 1px solid #e7eaed;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
+}
+
+.profile-main {
+    display: flex;
+    align-items: center;
+}
+
+.large-avatar {
+    width: 64px;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 16px;
+    border-radius: 50%;
+    background-color: #e8f3ed;
+    color: #198754;
+    font-size: 17px;
+    font-weight: 700;
+}
+
+.profile-info h2 {
+    margin: 0;
+    color: #343a40;
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.profile-status {
+    margin-top: 7px;
+}
+
+.profile-patch {
+    display: flex;
+    align-items: center;
+    padding-left: 30px;
+    border-left: 1px solid #edf0f2;
+}
+
+.patch-icon {
+    width: 42px;
+    height: 42px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 11px;
+    border-radius: 9px;
+    background-color: #fff4df;
+    color: #d08a00;
+    font-size: 17px;
+}
+
+.profile-patch > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.profile-patch span {
+    color: #929aa2;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+}
+
+.profile-patch strong {
+    margin-top: 3px;
+    color: #343a40;
+    font-size: 12px;
+}
+
+
+/* =========================================================
+   STATUS
+   ========================================================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+    .status-badge > span {
+        width: 5px;
+        height: 5px;
+        margin-right: 5px;
+        border-radius: 50%;
+    }
+
+    .status-badge.active {
+        background-color: #e9f6ef;
+        color: #198754;
+    }
+
+        .status-badge.active > span {
+            background-color: #198754;
+        }
+
+    .status-badge.inactive {
+        background-color: #fbeaea;
+        color: #dc3545;
+    }
+
+        .status-badge.inactive > span {
+            background-color: #dc3545;
+        }
+
+
+/* =========================================================
+   GRID DE INFORMAÇÕES
+   ========================================================= */
+
+.details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+
+/* =========================================================
+   PAINÉIS
+   ========================================================= */
+
+.details-panel,
+.fees-panel {
+    overflow: hidden;
+    background-color: #ffffff;
+    border: 1px solid #e7eaed;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+    .panel-header h5 {
+        margin: 0;
+        color: #343a40;
+        font-size: 14px;
+        font-weight: 650;
+    }
+
+    .panel-header > div:first-child span {
+        display: block;
+        margin-top: 4px;
+        color: #929aa2;
+        font-size: 10px;
+    }
+
+.panel-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background-color: #f1f8f4;
+    color: #198754;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   INFORMAÇÕES PESSOAIS
+   ========================================================= */
+
+.information-list {
+    padding: 6px 20px;
+}
+
+.information-item {
+    display: flex;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid #f0f2f4;
+}
+
+    .information-item:last-child {
+        border-bottom: none;
+    }
+
+.information-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 11px;
+    border-radius: 7px;
+    background-color: #f6f7f8;
+    color: #7b858e;
+    font-size: 13px;
+}
+
+.information-item > div:last-child {
+    display: flex;
+    flex-direction: column;
+}
+
+.information-item span {
+    color: #929aa2;
+    font-size: 9px;
+}
+
+.information-item strong {
+    margin-top: 3px;
+    color: #343a40;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   PROGRESSÃO
+   ========================================================= */
+
+.progression-content {
+    padding: 20px;
+}
+
+.current-patch {
+    display: flex;
+    flex-direction: column;
+    padding: 14px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    background-color: #f7f9f8;
+}
+
+    .current-patch span {
+        color: #929aa2;
+        font-size: 9px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .current-patch strong {
+        margin-top: 5px;
+        color: #198754;
+        font-size: 15px;
+    }
+
+.progression-form .form-label {
+    margin-bottom: 7px;
+    color: #6c757d;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.progression-controls {
+    display: flex;
+    gap: 8px;
+}
+
+    .progression-controls .form-select {
+        height: 38px;
+        font-size: 11px;
+        border-color: #dee2e6;
+    }
+
+.progression-button {
+    height: 38px;
+    white-space: nowrap;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+    .progression-button i {
+        margin-right: 5px;
+    }
+
+.progression-error {
+    margin-bottom: 15px;
+    font-size: 11px;
+}
+
+.completed-patch {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border-radius: 7px;
+    background-color: #e9f6ef;
+    color: #198754;
+    font-size: 10px;
+}
+
+    .completed-patch i {
+        margin-right: 7px;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   MENSALIDADES
+   ========================================================= */
+
+.fees-panel {
+    margin-bottom: 20px;
+}
+
+.add-fee-button {
+    height: 34px;
+    padding: 0 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+    .add-fee-button i {
+        margin-right: 6px;
+    }
+
+
+/* =========================================================
+   TABELA DE MENSALIDADES
+   ========================================================= */
+
+.fees-table {
+    margin: 0;
+}
+
+    .fees-table thead th {
+        padding: 12px 20px;
+        background-color: #fafbfc;
+        border-bottom: 1px solid #edf0f2;
+        color: #8a939c;
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+    }
+
+    .fees-table tbody td {
+        padding: 13px 20px;
+        border-bottom: 1px solid #f0f2f4;
+        color: #495057;
+        font-size: 11px;
+        vertical-align: middle;
+    }
+
+    .fees-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .fees-table tbody tr:hover {
+        background-color: #fafcfd;
+    }
+
+
+/* =========================================================
+   COMPETÊNCIA
+   ========================================================= */
+
+.reference-period {
+    display: flex;
+    align-items: center;
+}
+
+.period-icon {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9px;
+    border-radius: 6px;
+    background-color: #f1f8f4;
+    color: #198754;
+    font-size: 12px;
+}
+
+.reference-period strong {
+    color: #343a40;
+    font-size: 11px;
+}
+
+.fee-amount {
+    color: #343a40;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   STATUS DA MENSALIDADE
+   ========================================================= */
+
+.fee-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 9px;
+    font-weight: 600;
+}
+
+    .fee-status > span {
+        width: 5px;
+        height: 5px;
+        margin-right: 5px;
+        border-radius: 50%;
+    }
+
+    .fee-status.paid {
+        background-color: #e9f6ef;
+        color: #198754;
+    }
+
+        .fee-status.paid > span {
+            background-color: #198754;
+        }
+
+    .fee-status.pending {
+        background-color: #fff4df;
+        color: #b77900;
+    }
+
+        .fee-status.pending > span {
+            background-color: #d08a00;
+        }
+
+.payment-date {
+    display: inline-flex;
+    align-items: center;
+    color: #6c757d;
+    font-size: 10px;
+}
+
+    .payment-date i {
+        margin-right: 5px;
+        color: #198754;
+    }
+
+.no-payment {
+    color: #adb5bd;
+    font-size: 14px;
+}
+
+
+/* =========================================================
+   AÇÃO
+   ========================================================= */
+
+.action-button {
+    width: 30px;
+    height: 30px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid #e4e7eb;
+    border-radius: 6px;
+    background-color: #ffffff;
+    color: #dc3545;
+    font-size: 11px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+    .action-button.delete:hover {
+        background-color: #fbeaea;
+        border-color: #f0c4c7;
+    }
+
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
+.empty-fees {
+    min-height: 240px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+}
+
+.empty-fees-icon {
+    width: 52px;
+    height: 52px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    border-radius: 50%;
+    background-color: #f1f8f4;
+    color: #198754;
+    font-size: 21px;
+}
+
+.empty-fees h6 {
+    margin: 0;
+    color: #343a40;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.empty-fees p {
+    margin: 5px 0 14px;
+    color: #929aa2;
+    font-size: 10px;
+}
+
+.empty-fees .btn {
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.details-loading {
+    min-height: 500px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #7b858e;
+}
+
+    .details-loading p {
+        margin-top: 14px;
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   MODAIS
+   ========================================================= */
+
+.details-modal {
+    overflow: hidden;
+    border: none;
+    border-radius: 10px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+}
+
+    .details-modal .modal-header {
+        padding: 18px 20px;
+        border-bottom: 1px solid #edf0f2;
+    }
+
+.modal-title-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+    .modal-title-wrapper > div:last-child {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .modal-title-wrapper h5 {
+        margin: 0;
+        color: #343a40;
+        font-size: 14px;
+        font-weight: 650;
+    }
+
+    .modal-title-wrapper span {
+        margin-top: 3px;
+        color: #929aa2;
+        font-size: 9px;
+    }
+
+.modal-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+}
+
+    .modal-icon.success {
+        background-color: #e9f6ef;
+        color: #198754;
+    }
+
+    .modal-icon.danger {
+        background-color: #fbeaea;
+        color: #dc3545;
+    }
+
+.details-modal .modal-body {
+    padding: 22px 20px;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+    .form-group:last-child {
+        margin-bottom: 0;
+    }
+
+    .form-group .form-label {
+        display: block;
+        margin-bottom: 6px;
+        color: #6c757d;
+        font-size: 10px;
+        font-weight: 600;
+    }
+
+    .form-group .form-control {
+        height: 38px;
+        border-color: #dee2e6;
+        font-size: 11px;
+    }
+
+.input-with-icon {
+    position: relative;
+}
+
+    .input-with-icon > i {
+        position: absolute;
+        left: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9aa1a8;
+        font-size: 12px;
+        z-index: 2;
+    }
+
+    .input-with-icon .form-control {
+        padding-left: 32px;
+    }
+
+.currency-symbol {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #7b858e;
+    font-size: 10px;
+    font-weight: 600;
+    z-index: 2;
+}
+
+.input-with-icon .currency-symbol + .form-control {
+    padding-left: 34px;
+}
+
+.details-modal .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #edf0f2;
+}
+
+.modal-cancel,
+.modal-confirm {
+    height: 34px;
+    padding: 0 13px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+    .modal-confirm i {
+        margin-right: 5px;
+    }
+
+.delete-message {
+    margin: 0;
+    color: #343a40;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.delete-warning {
+    display: block;
+    margin-top: 6px;
+    color: #929aa2;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 900px) {
+
+    .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .member-profile-card {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .profile-patch {
+        width: 100%;
+        margin-top: 20px;
+        padding: 15px 0 0;
+        border-top: 1px solid #edf0f2;
+        border-left: none;
+    }
+}
+
+
+@media (max-width: 576px) {
+
+    .details-header h1 {
+        font-size: 22px;
+    }
+
+    .member-profile-card {
+        padding: 18px;
+    }
+
+    .large-avatar {
+        width: 54px;
+        height: 54px;
+        flex-basis: 54px;
+        font-size: 14px;
+    }
+
+    .profile-info h2 {
+        font-size: 17px;
+    }
+
+    .progression-controls {
+        flex-direction: column;
+    }
+
+    .progression-button {
+        width: 100%;
+    }
+
+    .add-fee-button {
+        font-size: 0;
+    }
+
+        .add-fee-button i {
+            margin-right: 0;
+            font-size: 12px;
+        }
+}

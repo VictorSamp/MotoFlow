@@ -15,28 +15,52 @@
 
 <div class="activity-page">
 
+    <!-- =====================================================
+         CABEÇALHO
+         ===================================================== -->
+
     <div class="activity-header">
 
         <div>
-            <h3 class="activity-title">
+
+            <div class="breadcrumb-area">
+                <span>Principal</span>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <span class="current">
+                    Atividades
+                </span>
+            </div>
+
+            <h1 class="activity-title">
                 Agenda de Atividades
-            </h3>
+            </h1>
 
             <p class="activity-subtitle">
                 Organize as atividades e responsabilidades do motoclube.
             </p>
+
         </div>
 
         <button type="button"
-                class="btn btn-success"
+                class="btn btn-success activity-create-button"
                 @onclick="OpenCreateModal">
 
-            + Nova atividade
+            <i class="bi bi-plus-lg"></i>
+
+            <span>
+                Nova atividade
+            </span>
 
         </button>
 
     </div>
 
+
+    <!-- =====================================================
+         CONTEÚDO
+         ===================================================== -->
     @if (isLoading)
     {
         <div class="activity-loading">
@@ -50,22 +74,34 @@
 
             </div>
 
-            <span>
+            <strong>
                 Carregando agenda...
+            </strong>
+
+            <span>
+                Aguarde enquanto buscamos as atividades.
             </span>
 
         </div>
     }
     else if (loadError is not null)
     {
-        <div class="alert alert-danger">
+        <div class="activity-error">
 
-            <strong>
-                Erro ao carregar a agenda.
-            </strong>
+            <div class="activity-error-icon">
+                <i class="bi bi-exclamation-triangle"></i>
+            </div>
 
             <div>
-                @loadError
+
+                <strong>
+                    Não foi possível carregar a agenda.
+                </strong>
+
+                <p>
+                    @loadError
+                </p>
+
             </div>
 
         </div>
@@ -74,8 +110,59 @@
     {
         <div class="calendar-card">
 
-            <div id="activity-calendar"
-                 style="min-height: 700px;">
+            <!-- =================================================
+                 CABEÇALHO DO CARD
+                 ================================================= -->
+
+            <div class="calendar-card-header">
+
+                <div class="calendar-title-area">
+
+                    <div class="calendar-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+
+                    <div>
+
+                        <h5>
+                            Agenda do motoclube
+                        </h5>
+
+                        <span>
+                            Visualize e gerencie as atividades programadas.
+                        </span>
+
+                    </div>
+
+                </div>
+
+                <div class="calendar-legend">
+
+                    <div class="legend-item">
+
+                        <span class="legend-dot"></span>
+
+                        <span>
+                            Atividade
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 CALENDÁRIO
+                 ================================================= -->
+
+            <div class="calendar-body">
+
+                <div id="activity-calendar"
+                     class="activity-calendar">
+                </div>
+
             </div>
 
         </div>
@@ -84,15 +171,14 @@
 </div>
 
 
-@* =========================================================
-   MODAL - CRIAR ATIVIDADE
-   ========================================================= *@
-
+<!-- =========================================================
+     MODAL - CRIAR ATIVIDADE
+     ========================================================= -->
 @if (showCreateModal)
 {
     <div class="modal-backdrop fade show"></div>
 
-    <div class="modal fade show d-block"
+    <div class="modal fade show d-block activity-modal"
          tabindex="-1">
 
         <div class="modal-dialog modal-dialog-centered">
@@ -101,80 +187,151 @@
 
                 <div class="modal-header">
 
-                    <h5 class="modal-title">
-                        Nova atividade
-                    </h5>
+                    <div class="modal-heading">
+
+                        <div class="modal-icon create-icon">
+                            <i class="bi bi-calendar-plus"></i>
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Nova atividade
+                            </h5>
+
+                            <span>
+                                Cadastre uma nova atividade do motoclube.
+                            </span>
+
+                        </div>
+
+                    </div>
 
                     <button type="button"
                             class="btn-close"
-                            @onclick="CloseCreateModal">
+                            @onclick="CloseCreateModal"
+                            disabled="@isSaving">
                     </button>
 
                 </div>
+
 
                 <div class="modal-body">
 
                     @if (createError is not null)
                     {
-                        <div class="alert alert-danger">
-                            @createError
+                        <div class="form-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            <span>
+                                @createError
+                            </span>
+
                         </div>
                     }
 
-                    <div class="mb-3">
+
+                    <!-- TÍTULO -->
+
+                    <div class="form-group">
 
                         <label class="form-label">
                             Título
                         </label>
 
-                        <input type="text"
-                               class="form-control"
-                               @bind="activityTitle" />
+                        <div class="input-wrapper">
+
+                            <i class="bi bi-card-text"></i>
+
+                            <input type="text"
+                                   class="form-control"
+                                   placeholder="Digite o título da atividade"
+                                   @bind="activityTitle" />
+
+                        </div>
 
                     </div>
 
-                    <div class="mb-3">
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="form-group">
 
                         <label class="form-label">
                             Descrição
                         </label>
 
-                        <textarea class="form-control"
-                                  rows="3"
-                                  @bind="activityDescription">
-                        </textarea>
+                        <div class="input-wrapper">
+
+                            <textarea class="form-control"
+                                      rows="3"
+                                      placeholder="Descreva a atividade"
+                                      @bind="activityDescription">
+                            </textarea>
+
+                            <i class="bi bi-text-left"></i>
+
+                        </div>
 
                     </div>
+
+
+                    <!-- DATAS -->
 
                     <div class="row">
 
                         <div class="col-md-6">
 
-                            <label class="form-label">
-                                Início
-                            </label>
+                            <div class="form-group">
 
-                            <input type="datetime-local"
-                                   class="form-control"
-                                   @bind="activityStart" />
+                                <label class="form-label">
+                                    Início
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <i class="bi bi-calendar-event"></i>
+
+                                    <input type="datetime-local"
+                                           class="form-control"
+                                           @bind="activityStart" />
+
+                                </div>
+
+                            </div>
 
                         </div>
 
+
                         <div class="col-md-6">
 
-                            <label class="form-label">
-                                Fim
-                            </label>
+                            <div class="form-group">
 
-                            <input type="datetime-local"
-                                   class="form-control"
-                                   @bind="activityEnd" />
+                                <label class="form-label">
+                                    Fim
+                                </label>
+
+                                <div class="input-wrapper">
+
+                                    <i class="bi bi-calendar-check"></i>
+
+                                    <input type="datetime-local"
+                                           class="form-control"
+                                           @bind="activityEnd" />
+
+                                </div>
+
+                            </div>
 
                         </div>
 
                     </div>
 
-                    <div class="mb-3 mt-3">
+
+                    <!-- RESPONSÁVEIS -->
+
+                    <div class="form-group">
 
                         <label class="form-label">
                             Responsáveis
@@ -182,15 +339,27 @@
 
                         @if (members is null)
                         {
-                            <p class="text-muted">
-                                Carregando membros...
-                            </p>
+                            <div class="members-loading">
+
+                                <div class="spinner-border spinner-border-sm"></div>
+
+                                <span>
+                                    Carregando membros...
+                                </span>
+
+                            </div>
                         }
                         else if (!members.Any())
                         {
-                            <p class="text-muted">
-                                Nenhum membro encontrado.
-                            </p>
+                            <div class="empty-members">
+
+                                <i class="bi bi-people"></i>
+
+                                <span>
+                                    Nenhum membro encontrado.
+                                </span>
+
+                            </div>
                         }
                         else
                         {
@@ -198,16 +367,267 @@
 
                                 @foreach (var member in members)
                                 {
-                                    <div class="form-check">
+                                    <label class="member-checkbox">
 
-                                        <input class="form-check-input"
-                                               type="checkbox"
+                                        <input type="checkbox"
                                                checked="@selectedMemberIds.Contains(member.Id)"
                                                @onchange="e => ToggleMember(member.Id, e)" />
 
-                                        <label class="form-check-label">
+                                        <span class="member-checkmark">
+                                            <i class="bi bi-check"></i>
+                                        </span>
+
+                                        <span class="member-name">
                                             @member.Name
-                                        </label>
+                                        </span>
+
+                                    </label>
+                                }
+
+                            </div>
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button"
+                            class="btn btn-outline-secondary modal-cancel-button"
+                            @onclick="CloseCreateModal"
+                            disabled="@isSaving">
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-success modal-save-button"
+                            @onclick="CreateActivity"
+                            disabled="@isSaving">
+
+                        @if (isSaving)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span>
+
+                            <span>
+                                Criando...
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-check-lg"></i>
+
+                            <span>
+                                Criar atividade
+                            </span>
+                        }
+
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+}
+
+
+<!-- =========================================================
+     MODAL - DETALHES
+     ========================================================= -->
+@if (showDetailsModal && selectedActivity is not null)
+{
+    <div class="modal-backdrop fade show"></div>
+
+    <div class="modal fade show d-block activity-modal"
+         tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div class="modal-heading">
+
+                        <div class="modal-icon details-icon">
+                            <i class="bi bi-calendar-event"></i>
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Detalhes da atividade
+                            </h5>
+
+                            <span>
+                                Informações da atividade selecionada.
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseDetailsModal"
+                            disabled="@isDeleting">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    @if (deleteError is not null)
+                    {
+                        <div class="form-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            <span>
+                                @deleteError
+                            </span>
+
+                        </div>
+                    }
+
+
+                    <div class="activity-detail-title">
+
+                        <h4>
+                            @selectedActivity.Title
+                        </h4>
+
+                    </div>
+
+
+                    <!-- DESCRIÇÃO -->
+
+                    <div class="detail-section">
+
+                        <div class="detail-label">
+
+                            <i class="bi bi-card-text"></i>
+
+                            <span>
+                                Descrição
+                            </span>
+
+                        </div>
+
+                        <div class="detail-content">
+
+                            @(string.IsNullOrWhiteSpace(
+                                selectedActivity.Description)
+                                ? "Nenhuma descrição informada."
+                                : selectedActivity.Description)
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PERÍODO -->
+
+                    <div class="detail-section">
+
+                        <div class="detail-label">
+
+                            <i class="bi bi-clock"></i>
+
+                            <span>
+                                Período
+                            </span>
+
+                        </div>
+
+                        <div class="detail-period">
+
+                            <div>
+
+                                <span>
+                                    Início
+                                </span>
+
+                                <strong>
+                                    @selectedActivity.StartDate.ToString(
+                                        "dd/MM/yyyy HH:mm")
+                                </strong>
+
+                            </div>
+
+                            <div class="period-arrow">
+
+                                <i class="bi bi-arrow-right"></i>
+
+                            </div>
+
+                            <div>
+
+                                <span>
+                                    Fim
+                                </span>
+
+                                <strong>
+                                    @selectedActivity.EndDate.ToString(
+                                        "dd/MM/yyyy HH:mm")
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- RESPONSÁVEIS -->
+
+                    <div class="detail-section">
+
+                        <div class="detail-label">
+
+                            <i class="bi bi-people"></i>
+
+                            <span>
+                                Responsáveis
+                            </span>
+
+                        </div>
+
+                        @if (selectedActivity.Members is null ||
+                             !selectedActivity.Members.Any())
+                        {
+                            <div class="detail-empty">
+
+                                Nenhum responsável definido.
+
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="activity-members">
+
+                                @foreach (var member
+                                    in selectedActivity.Members)
+                                {
+                                    <div class="activity-member">
+
+                                        <div class="member-avatar">
+
+                                            @GetInitials(
+                                                member.MemberName)
+
+                                        </div>
+
+                                        <span>
+                                            @member.MemberName
+                                        </span>
 
                                     </div>
                                 }
@@ -219,146 +639,11 @@
 
                 </div>
 
-                <div class="modal-footer">
-
-                    <button type="button"
-                            class="btn btn-secondary"
-                            @onclick="CloseCreateModal"
-                            disabled="@isSaving">
-
-                        Cancelar
-
-                    </button>
-
-                    <button type="button"
-                            class="btn btn-success"
-                            @onclick="CreateActivity"
-                            disabled="@isSaving">
-
-                        @(isSaving
-                            ? "Criando..."
-                            : "Criar atividade")
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-}
-
-
-@* =========================================================
-   MODAL - DETALHES DA ATIVIDADE
-   ========================================================= *@
-
-@if (showDetailsModal && selectedActivity is not null)
-{
-    <div class="modal-backdrop fade show"></div>
-
-    <div class="modal fade show d-block"
-         tabindex="-1">
-
-        <div class="modal-dialog modal-dialog-centered">
-
-            <div class="modal-content">
-
-                <div class="modal-header">
-
-                    <h5 class="modal-title">
-                        @selectedActivity.Title
-                    </h5>
-
-                    <button type="button"
-                            class="btn-close"
-                            @onclick="CloseDetailsModal"
-                            disabled="@isDeleting">
-                    </button>
-
-                </div>
-
-                <div class="modal-body">
-
-                    @if (deleteError is not null)
-                    {
-                        <div class="alert alert-danger">
-                            @deleteError
-                        </div>
-                    }
-
-                    <div class="mb-3">
-
-                        <strong>
-                            Descrição
-                        </strong>
-
-                        <p class="mt-1">
-                            @(string.IsNullOrWhiteSpace(
-                                selectedActivity.Description)
-                                ? "Nenhuma descrição informada."
-                                : selectedActivity.Description)
-                        </p>
-
-                    </div>
-
-                    <div class="mb-3">
-
-                        <strong>
-                            Período
-                        </strong>
-
-                        <p class="mt-1 mb-0">
-                            @selectedActivity.StartDate.ToString(
-                                "dd/MM/yyyy HH:mm")
-                        </p>
-
-                        <p class="mb-0">
-                            até
-                            @selectedActivity.EndDate.ToString(
-                                "dd/MM/yyyy HH:mm")
-                        </p>
-
-                    </div>
-
-                    <div>
-
-                        <strong>
-                            Responsáveis
-                        </strong>
-
-                        @if (selectedActivity.Members is null ||
-                             !selectedActivity.Members.Any())
-                        {
-                            <p class="text-muted mt-1">
-                                Nenhum responsável definido.
-                            </p>
-                        }
-                        else
-                        {
-                            <ul class="mt-2">
-
-                                @foreach (var member
-                                    in selectedActivity.Members)
-                                {
-                                    <li>
-                                        @member.MemberName
-                                    </li>
-                                }
-
-                            </ul>
-                        }
-
-                    </div>
-
-                </div>
 
                 <div class="modal-footer">
 
                     <button type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-outline-secondary modal-cancel-button"
                             @onclick="CloseDetailsModal"
                             disabled="@isDeleting">
 
@@ -367,11 +652,15 @@
                     </button>
 
                     <button type="button"
-                            class="btn btn-danger"
+                            class="btn btn-danger modal-delete-button"
                             @onclick="OpenDeleteModal"
                             disabled="@isDeleting">
 
-                        Remover
+                        <i class="bi bi-trash"></i>
+
+                        <span>
+                            Remover
+                        </span>
 
                     </button>
 
@@ -385,15 +674,14 @@
 }
 
 
-@* =========================================================
-   MODAL - CONFIRMAR EXCLUSÃO
-   ========================================================= *@
-
+<!-- =========================================================
+     MODAL - CONFIRMAR EXCLUSÃO
+     ========================================================= -->
 @if (showDeleteModal && selectedActivity is not null)
 {
     <div class="modal-backdrop fade show"></div>
 
-    <div class="modal fade show d-block"
+    <div class="modal fade show d-block activity-modal"
          tabindex="-1">
 
         <div class="modal-dialog modal-dialog-centered">
@@ -402,9 +690,25 @@
 
                 <div class="modal-header">
 
-                    <h5 class="modal-title">
-                        Confirmar exclusão
-                    </h5>
+                    <div class="modal-heading">
+
+                        <div class="modal-icon delete-icon">
+                            <i class="bi bi-trash"></i>
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Confirmar exclusão
+                            </h5>
+
+                            <span>
+                                Esta ação não poderá ser desfeita.
+                            </span>
+
+                        </div>
+
+                    </div>
 
                     <button type="button"
                             class="btn-close"
@@ -414,28 +718,49 @@
 
                 </div>
 
+
                 <div class="modal-body">
 
                     @if (deleteError is not null)
                     {
-                        <div class="alert alert-danger">
-                            @deleteError
+                        <div class="form-error">
+
+                            <i class="bi bi-exclamation-circle"></i>
+
+                            <span>
+                                @deleteError
+                            </span>
+
                         </div>
                     }
 
-                    <p class="mb-0">
-                        Tem certeza que deseja remover a atividade
-                        <strong>
-                            @selectedActivity.Title
-                        </strong>?
-                    </p>
+                    <div class="delete-confirmation">
+
+                        <div class="delete-warning-icon">
+
+                            <i class="bi bi-exclamation-triangle"></i>
+
+                        </div>
+
+                        <p>
+
+                            Tem certeza que deseja remover a atividade
+
+                            <strong>
+                                @selectedActivity.Title
+                            </strong>?
+
+                        </p>
+
+                    </div>
 
                 </div>
+
 
                 <div class="modal-footer">
 
                     <button type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-outline-secondary modal-cancel-button"
                             @onclick="CloseDeleteModal"
                             disabled="@isDeleting">
 
@@ -444,13 +769,26 @@
                     </button>
 
                     <button type="button"
-                            class="btn btn-danger"
+                            class="btn btn-danger modal-delete-button"
                             @onclick="ConfirmDeleteActivity"
                             disabled="@isDeleting">
 
-                        @(isDeleting
-                            ? "Removendo..."
-                            : "Sim, remover")
+                        @if (isDeleting)
+                        {
+                            <span class="spinner-border spinner-border-sm"></span>
+
+                            <span>
+                                Removendo...
+                            </span>
+                        }
+                        else
+                        {
+                            <i class="bi bi-trash"></i>
+
+                            <span>
+                                Sim, remover
+                            </span>
+                        }
 
                     </button>
 
@@ -809,6 +1147,26 @@
         await JS.InvokeVoidAsync(
             "motoFlowCalendar.setActivities",
             activities ?? []);
+    }
+
+
+    private static string GetInitials(
+        string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 1)
+            return parts[0][0].ToString().ToUpper();
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+                .ToUpper();
     }
 
 

@@ -1,136 +1,451 @@
 ﻿@page "/members"
+
 @inject MemberApiService MemberService
 @inject NavigationManager Nav
+
 @rendermode InteractiveServer
 
-<h3>Membros</h3>
+<PageTitle>Membros | MotoFlow</PageTitle>
 
-<button class="btn btn-success mb-3" @onclick="Create">
-    + Adicionar Membro
-</button>
+<div class="members-page">
 
-@if (members is null)
-{
-    <p>Carregando...</p>
-}
-else if (!members.Any())
-{
-    <p>Nenhum membro encontrado.</p>
-}
-else
-{
-    <table class="table table-striped align-middle">
-        <thead class="table-dark">
-            <tr>
-                <th>Nome</th>
-                <th>Telefone</th>
-                <th>Email</th>
-                <th>Status</th>
-                <th>Opções</th>
-            </tr>
-        </thead>
+    <!-- Cabeçalho -->
+    <div class="page-header">
 
-        <tbody>
-            @foreach (var m in members)
-            {
-                <tr>
-                    <td>@m.Name</td>
-                    <td>@m.PhoneNumber</td>
-                    <td>@m.Email</td>
-                    <td>
-                        @if (m.Status.ToString() == "Active")
-                        {
-                            <span class="badge bg-success">Ativo</span>
-                        }
-                        else
-                        {
-                            <span class="badge bg-danger">Inativo</span>
-                        }
-                    </td>
-                    <td>
-                        <div class="btn-group" role="group">
-                            <button class="btn btn-sm btn-info" @onclick="() => Details(m.Id)">Detalhes</button>
-                            <button class="btn btn-sm btn-warning" @onclick="() => Edit(m.Id)">Alterar</button>
-                            <button class="btn btn-sm btn-danger" @onclick="() => OpenDeleteModal(m.Id)">Remover</button>
-                        </div>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-}
+        <div>
+            <h1>Membros</h1>
 
+            <p>
+                Gerencie os integrantes do seu motoclube.
+            </p>
+        </div>
+
+        <button class="btn btn-success add-member-button"
+                @onclick="Create">
+
+            <i class="bi bi-person-plus-fill"></i>
+
+            Adicionar Membro
+
+        </button>
+
+    </div>
+
+
+    @if (members is null)
+    {
+        <!-- Loading -->
+
+        <div class="members-loading">
+
+            <div class="spinner-border text-success"
+                 role="status">
+            </div>
+
+            <p>
+                Carregando membros...
+            </p>
+
+        </div>
+    }
+    else
+    {
+        <!-- Resumo -->
+
+        <div class="members-summary">
+
+            <div class="summary-icon">
+                <i class="bi bi-people-fill"></i>
+            </div>
+
+            <div>
+
+                <span class="summary-label">
+                    Total de membros
+                </span>
+
+                <strong>
+                    @members.Count
+                </strong>
+
+            </div>
+
+        </div>
+
+
+        @if (!members.Any())
+        {
+            <!-- Empty state -->
+
+            <div class="empty-members">
+
+                <div class="empty-icon">
+                    <i class="bi bi-people"></i>
+                </div>
+
+                <h5>
+                    Nenhum membro encontrado
+                </h5>
+
+                <p>
+                    Comece cadastrando o primeiro membro do motoclube.
+                </p>
+
+                <button class="btn btn-success"
+                        @onclick="Create">
+
+                    <i class="bi bi-person-plus-fill"></i>
+
+                    Adicionar Membro
+
+                </button>
+
+            </div>
+        }
+        else
+        {
+            <!-- Tabela -->
+
+            <div class="members-panel">
+
+                <div class="members-panel-header">
+
+                    <div>
+
+                        <h5>
+                            Membros cadastrados
+                        </h5>
+
+                        <span>
+                            Lista dos integrantes do motoclube
+                        </span>
+
+                    </div>
+
+                    <div class="panel-icon">
+                        <i class="bi bi-list-ul"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="table-responsive">
+
+                    <table class="table members-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Membro
+                                </th>
+
+                                <th>
+                                    Telefone
+                                </th>
+
+                                <th>
+                                    Email
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th class="text-end">
+                                    Ações
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var m in members)
+                            {
+                                <tr>
+
+                                    <!-- Membro -->
+
+                                    <td>
+
+                                        <div class="member-info">
+
+                                            <div class="member-avatar">
+                                                @GetInitials(m.Name)
+                                            </div>
+
+                                            <div class="member-details">
+
+                                                <strong>
+                                                    @m.Name
+                                                </strong>
+
+                                                <span>
+                                                    Membro do motoclube
+                                                </span>
+
+                                            </div>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <!-- Telefone -->
+
+                                    <td>
+
+                                        <span class="contact-info">
+                                            <i class="bi bi-telephone"></i>
+
+                                            @m.PhoneNumber
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Email -->
+
+                                    <td>
+
+                                        <span class="contact-info">
+                                            <i class="bi bi-envelope"></i>
+
+                                            @m.Email
+                                        </span>
+
+                                    </td>
+
+
+                                    <!-- Status -->
+
+                                    <td>
+
+                                        @if (m.Status.ToString() == "Active")
+                                        {
+                                            <span class="status-badge active">
+
+                                                <span></span>
+
+                                                Ativo
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="status-badge inactive">
+
+                                                <span></span>
+
+                                                Inativo
+
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <!-- Ações -->
+
+                                    <td class="text-end">
+
+                                        <div class="member-actions">
+
+                                            <button class="action-button details"
+                                                    title="Ver detalhes"
+                                                    @onclick="() => Details(m.Id)">
+
+                                                <i class="bi bi-eye"></i>
+
+                                            </button>
+
+                                            <button class="action-button edit"
+                                                    title="Alterar membro"
+                                                    @onclick="() => Edit(m.Id)">
+
+                                                <i class="bi bi-pencil"></i>
+
+                                            </button>
+
+                                            <button class="action-button delete"
+                                                    title="Remover membro"
+                                                    @onclick="() => OpenDeleteModal(m.Id)">
+
+                                                <i class="bi bi-trash3"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+        }
+    }
+
+</div>
+
+
+<!-- Modal de exclusão -->
 @if (showDeleteModal)
 {
     <div class="modal-backdrop fade show"></div>
 
-    <div class="modal fade show d-block" tabindex="-1">
+    <div class="modal fade show d-block"
+         tabindex="-1">
+
         <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content">
+
+            <div class="modal-content delete-modal">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirmar exclusão</h5>
+
+                    <div class="delete-modal-title">
+
+                        <div class="delete-modal-icon">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+
+                        <h5>
+                            Confirmar exclusão
+                        </h5>
+
+                    </div>
+
+                    <button type="button"
+                            class="btn-close"
+                            @onclick="CloseDeleteModal">
+                    </button>
+
                 </div>
+
 
                 <div class="modal-body">
-                    <p>Tem certeza que deseja excluir este membro?</p>
+
+                    <p>
+                        Tem certeza que deseja excluir este membro?
+                    </p>
+
+                    <span>
+                        Essa ação não poderá ser desfeita.
+                    </span>
+
                 </div>
 
+
                 <div class="modal-footer">
-                    <button class="btn btn-secondary"
+
+                    <button class="btn btn-light modal-cancel"
                             @onclick="CloseDeleteModal">
+
                         Cancelar
+
                     </button>
 
-                    <button class="btn btn-danger"
+                    <button class="btn btn-danger modal-delete"
                             @onclick="ConfirmDelete">
+
+                        <i class="bi bi-trash3"></i>
+
                         Sim, excluir
+
                     </button>
+
                 </div>
 
             </div>
+
         </div>
+
     </div>
 }
 
+
 @code {
+
     private List<MemberDto>? members;
 
-    private bool showDeleteModal = false;
+    private bool showDeleteModal;
+
     private Guid selectedMemberId;
+
 
     protected override async Task OnInitializedAsync()
     {
-        members = await MemberService.GetAllMembers();
+        members =
+            await MemberService.GetAllMembers();
     }
+
 
     private void Create()
         => Nav.NavigateTo("/members/new");
 
+
     private void Edit(Guid id)
         => Nav.NavigateTo($"/members/edit/{id}");
+
 
     private void Details(Guid id)
         => Nav.NavigateTo($"/members/{id}");
 
+
     private void OpenDeleteModal(Guid id)
     {
         selectedMemberId = id;
+
         showDeleteModal = true;
     }
+
 
     private void CloseDeleteModal()
     {
         showDeleteModal = false;
+
         selectedMemberId = Guid.Empty;
     }
 
+
     private async Task ConfirmDelete()
     {
-        await MemberService.DeleteMember(selectedMemberId);
+        await MemberService.DeleteMember(
+            selectedMemberId);
 
-        members = await MemberService.GetAllMembers();
+        members =
+            await MemberService.GetAllMembers();
 
         CloseDeleteModal();
     }
+
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 1)
+            return parts[0][0].ToString().ToUpper();
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+                .ToUpper();
+    }
+
 }

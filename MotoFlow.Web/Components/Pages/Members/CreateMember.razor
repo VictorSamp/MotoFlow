@@ -2,72 +2,70 @@
 @using MotoFlow.Web.Components.ViewModels.Members
 
 @page "/members/new"
+
 @inject MemberApiService MemberService
 @inject NavigationManager Nav
+
 @rendermode InteractiveServer
 
-<div class="container mt-4">
+<PageTitle>Adicionar Membro | MotoFlow</PageTitle>
 
-    <div class="row justify-content-center">
+<div class="create-member-page">
 
-        <div class="col-lg-7">
+    <!-- Cabeçalho -->
 
-            <div class="card shadow-sm">
+    <div class="create-member-header">
 
-                <div class="card-header bg-dark text-white">
-                    <h4 class="mb-0">Adicionar novo membro</h4>
+        <div>
+
+            <div class="breadcrumb-area">
+
+                <span>
+                    Membros
+                </span>
+
+                <i class="bi bi-chevron-right"></i>
+
+                <span class="current">
+                    Novo membro
+                </span>
+
+            </div>
+
+            <h1>
+                Adicionar novo membro
+            </h1>
+
+            <p>
+                Cadastre um novo integrante no motoclube.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Formulário -->
+
+    <div class="create-member-panel">
+
+        <div class="panel-header">
+
+            <div class="panel-title">
+
+                <div class="panel-icon">
+                    <i class="bi bi-person-plus-fill"></i>
                 </div>
 
-                <div class="card-body">
+                <div>
 
-                    <p class="text-muted">
-                        Preencha as informações para adicionar um novo membro.
-                    </p>
+                    <h5>
+                        Informações do membro
+                    </h5>
 
-                    <EditForm Model="model"
-                              OnValidSubmit="Save"
-                              FormName="create-member-model">
-
-                        <DataAnnotationsValidator />
-                        <ValidationSummary class="text-danger mb-3" />
-
-                        <div class="mb-3">
-                            <label class="form-label">Nome</label>
-                            <InputText class="form-control"
-                                       @bind-Value="model.Name" />
-                            <ValidationMessage For="@(() => model.Name)" />
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <InputText class="form-control"
-                                       @bind-Value="model.Email" />
-                            <ValidationMessage For="@(() => model.Email)" />
-                        </div>
-
-                        <div class="mb-4">
-                            <label class="form-label">Telefone</label>
-                            <InputText class="form-control"
-                                       @bind-Value="model.PhoneNumber" />
-                            <ValidationMessage For="@(() => model.PhoneNumber)" />
-                        </div>
-
-                        <div class="d-flex justify-content-end gap-2">
-
-                            <button type="button"
-                                    class="btn btn-outline-secondary"
-                                    @onclick="Cancel">
-                                Cancelar
-                            </button>
-
-                            <button type="submit"
-                                    class="btn btn-success">
-                                Adicionar membro
-                            </button>
-
-                        </div>
-
-                    </EditForm>
+                    <span>
+                        Preencha os dados cadastrais abaixo.
+                    </span>
 
                 </div>
 
@@ -75,25 +73,142 @@
 
         </div>
 
+
+        <div class="panel-body">
+
+            <EditForm Model="model"
+                      OnValidSubmit="Save"
+                      FormName="create-member-model">
+
+                <DataAnnotationsValidator />
+
+                <ValidationSummary class="validation-summary" />
+
+
+                <!-- Nome -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Nome completo
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-person"></i>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.Name"
+                                   placeholder="Digite o nome completo" />
+
+                    </div>
+
+                    <ValidationMessage For="@(() => model.Name)"
+                                       class="validation-message" />
+
+                </div>
+
+
+                <!-- Email -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Email
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-envelope"></i>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.Email"
+                                   placeholder="Digite o email" />
+
+                    </div>
+
+                    <ValidationMessage For="@(() => model.Email)"
+                                       class="validation-message" />
+
+                </div>
+
+
+                <!-- Telefone -->
+
+                <div class="form-group">
+
+                    <label class="form-label">
+                        Telefone
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <i class="bi bi-telephone"></i>
+
+                        <InputText class="form-control"
+                                   @bind-Value="model.PhoneNumber"
+                                   placeholder="Digite o telefone" />
+
+                    </div>
+
+                    <ValidationMessage For="@(() => model.PhoneNumber)"
+                                       class="validation-message" />
+
+                </div>
+
+
+                <!-- Ações -->
+
+                <div class="form-actions">
+
+                    <button type="button"
+                            class="btn btn-light cancel-button"
+                            @onclick="Cancel">
+
+                        <i class="bi bi-arrow-left"></i>
+
+                        Cancelar
+
+                    </button>
+
+                    <button type="submit"
+                            class="btn btn-success save-button">
+
+                        <i class="bi bi-check-lg"></i>
+
+                        Adicionar membro
+
+                    </button>
+
+                </div>
+
+            </EditForm>
+
+        </div>
+
     </div>
 
 </div>
+
 
 @code {
 
     private CreateMemberViewModel model = new();
 
+
     private async Task Save()
     {
-        var request = new CreateMemberRequest(
-            model.Name,
-            model.Email,
-            model.PhoneNumber);
+        var request =
+            new CreateMemberRequest(
+                model.Name,
+                model.Email,
+                model.PhoneNumber);
 
         await MemberService.CreateMember(request);
 
         Nav.NavigateTo("/members");
     }
+
 
     private void Cancel()
     {

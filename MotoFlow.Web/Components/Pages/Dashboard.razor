@@ -4,96 +4,222 @@
 @using MotoFlow.Web.Services
 @inject DashboardApiService DashboardService
 
-<PageTitle>Dashboard</PageTitle>
+<PageTitle>Dashboard | MotoFlow</PageTitle>
 
-<div class="container-fluid mt-4">
+<div class="dashboard">
 
-    <h2 class="mb-1">Dashboard</h2>
+    <!-- Cabeçalho -->
+    <div class="dashboard-header">
 
-    <p class="text-muted mb-4">
-        Bem-vindo ao MotoFlow. Abaixo estão os principais indicadores do motoclube.
-    </p>
+        <div>
+            <h1>Dashboard</h1>
+
+            <p>
+                Visão geral do seu motoclube.
+            </p>
+        </div>
+
+        <div class="dashboard-date">
+            <i class="bi bi-calendar3"></i>
+            @DateTime.Now.ToString("dd/MM/yyyy")
+        </div>
+
+    </div>
+
 
     @if (dashboard is null)
     {
-        <div class="text-center mt-5">
-            <div class="spinner-border text-primary"></div>
-            <p class="mt-3">Carregando informações...</p>
+        <div class="dashboard-loading">
+
+            <div class="spinner-border text-success"
+                 role="status">
+            </div>
+
+            <p>
+                Carregando informações...
+            </p>
+
         </div>
     }
     else
     {
+        <!-- Indicadores -->
         <div class="row g-4 mb-4">
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted">Total de Membros</h6>
-                        <h2>@dashboard.TotalMembers</h2>
+            <div class="col-xl-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon">
+                        <i class="bi bi-people-fill"></i>
                     </div>
+
+                    <div class="card-content">
+
+                        <span class="card-label">
+                            Total de Membros
+                        </span>
+
+                        <strong class="card-value">
+                            @dashboard.TotalMembers
+                        </strong>
+
+                        <span class="card-description">
+                            Membros cadastrados
+                        </span>
+
+                    </div>
+
                 </div>
+
             </div>
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted">Membros Ativos</h6>
-                        <h2 class="text-success">
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon success">
+                        <i class="bi bi-person-check-fill"></i>
+                    </div>
+
+                    <div class="card-content">
+
+                        <span class="card-label">
+                            Membros Ativos
+                        </span>
+
+                        <strong class="card-value">
                             @dashboard.ActiveMembers
-                        </h2>
+                        </strong>
+
+                        <span class="card-description">
+                            Atualmente ativos
+                        </span>
+
                     </div>
+
                 </div>
+
             </div>
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted">Membros Inativos</h6>
-                        <h2 class="text-danger">
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon danger">
+                        <i class="bi bi-person-x-fill"></i>
+                    </div>
+
+                    <div class="card-content">
+
+                        <span class="card-label">
+                            Membros Inativos
+                        </span>
+
+                        <strong class="card-value">
                             @dashboard.InactiveMembers
-                        </h2>
+                        </strong>
+
+                        <span class="card-description">
+                            Atualmente inativos
+                        </span>
+
                     </div>
+
                 </div>
+
             </div>
 
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0">
-                    <div class="card-body">
-                        <h6 class="text-muted">Níveis de Insígnia</h6>
-                        <h2>@dashboard.PatchLevelsUsed</h2>
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="dashboard-card">
+
+                    <div class="card-icon warning">
+                        <i class="bi bi-award-fill"></i>
                     </div>
+
+                    <div class="card-content">
+
+                        <span class="card-label">
+                            Níveis de Insígnia
+                        </span>
+
+                        <strong class="card-value">
+                            @dashboard.PatchLevelsUsed
+                        </strong>
+
+                        <span class="card-description">
+                            Níveis utilizados
+                        </span>
+
+                    </div>
+
                 </div>
+
             </div>
 
         </div>
 
-        <div class="row">
 
-            <div class="col-lg-6 mb-4">
+        <!-- Conteúdo -->
+        <div class="row g-4">
 
-                <div class="card shadow-sm h-100">
+            <!-- Distribuição -->
+            <div class="col-lg-6">
 
-                    <div class="card-header bg-dark text-white">
-                        Distribuição por Insígnia
+                <div class="dashboard-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h5>
+                                Distribuição por Insígnia
+                            </h5>
+
+                            <span>
+                                Membros por nível atual
+                            </span>
+
+                        </div>
+
+                        <div class="panel-header-icon">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </div>
+
                     </div>
 
-                    <div class="card-body">
 
-                        @if (dashboard.PatchDistribution.Count == 0)
-                        {
-                            <p class="text-muted mb-0">
+                    @if (dashboard.PatchDistribution.Count == 0)
+                    {
+                        <div class="empty-state">
+
+                            <i class="bi bi-inbox"></i>
+
+                            <span>
                                 Nenhuma informação disponível.
-                            </p>
-                        }
-                        else
-                        {
-                            <table class="table table-striped mb-0">
+                            </span>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table dashboard-table">
 
                                 <thead>
+
                                     <tr>
                                         <th>Insígnia</th>
-                                        <th class="text-end">Quantidade</th>
+                                        <th class="text-end">
+                                            Quantidade
+                                        </th>
                                     </tr>
+
                                 </thead>
 
                                 <tbody>
@@ -101,53 +227,94 @@
                                     @foreach (var item in dashboard.PatchDistribution)
                                     {
                                         <tr>
+
                                             <td>
-                                                @TranslatePatch(item.Key)
+                                                <div class="patch-name">
+
+                                                    <span class="patch-dot"></span>
+
+                                                    @TranslatePatch(item.Key)
+
+                                                </div>
                                             </td>
 
                                             <td class="text-end">
-                                                @item.Value
+
+                                                <span class="quantity-badge">
+                                                    @item.Value
+                                                </span>
+
                                             </td>
+
                                         </tr>
                                     }
 
                                 </tbody>
 
                             </table>
-                        }
 
-                    </div>
+                        </div>
+                    }
 
                 </div>
 
             </div>
 
-            <div class="col-lg-6 mb-4">
 
-                <div class="card shadow-sm h-100">
+            <!-- Membros -->
+            <div class="col-lg-6">
 
-                    <div class="card-header bg-dark text-white">
-                        Membros Cadastrados
+                <div class="dashboard-panel">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h5>
+                                Membros Cadastrados
+                            </h5>
+
+                            <span>
+                                Visão dos membros recentes
+                            </span>
+
+                        </div>
+
+                        <div class="panel-header-icon">
+                            <i class="bi bi-people-fill"></i>
+                        </div>
+
                     </div>
 
-                    <div class="card-body">
 
-                        @if (dashboard.RecentMembers.Count == 0)
-                        {
-                            <p class="text-muted mb-0">
+                    @if (dashboard.RecentMembers.Count == 0)
+                    {
+                        <div class="empty-state">
+
+                            <i class="bi bi-person-plus"></i>
+
+                            <span>
                                 Nenhum membro cadastrado.
-                            </p>
-                        }
-                        else
-                        {
-                            <table class="table table-hover mb-0">
+                            </span>
+
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="table-responsive">
+
+                            <table class="table dashboard-table">
 
                                 <thead>
+
                                     <tr>
                                         <th>Nome</th>
                                         <th>Insígnia</th>
-                                        <th>Status</th>
+                                        <th class="text-end">
+                                            Status
+                                        </th>
                                     </tr>
+
                                 </thead>
 
                                 <tbody>
@@ -157,24 +324,39 @@
                                         <tr>
 
                                             <td>
-                                                @member.Name
+
+                                                <div class="member-name">
+
+                                                    <div class="member-avatar">
+                                                        @GetInitials(member.Name)
+                                                    </div>
+
+                                                    <span>
+                                                        @member.Name
+                                                    </span>
+
+                                                </div>
+
                                             </td>
 
                                             <td>
-                                                @TranslatePatch(member.CurrentPatchLevel)
+                                                @TranslatePatch(
+                                                    member.CurrentPatchLevel)
                                             </td>
 
-                                            <td>
+                                            <td class="text-end">
 
                                                 @if (member.Status == "Active")
                                                 {
-                                                    <span class="badge bg-success">
+                                                    <span class="status-badge active">
+                                                        <span></span>
                                                         Ativo
                                                     </span>
                                                 }
                                                 else
                                                 {
-                                                    <span class="badge bg-danger">
+                                                    <span class="status-badge inactive">
+                                                        <span></span>
                                                         Inativo
                                                     </span>
                                                 }
@@ -187,9 +369,9 @@
                                 </tbody>
 
                             </table>
-                        }
 
-                    </div>
+                        </div>
+                    }
 
                 </div>
 
@@ -200,13 +382,15 @@
 
 </div>
 
+
 @code {
 
     private DashboardDto? dashboard;
 
     protected override async Task OnInitializedAsync()
     {
-        dashboard = await DashboardService.GetDashboard();
+        dashboard =
+            await DashboardService.GetDashboard();
     }
 
     private static string TranslatePatch(string level)
@@ -220,4 +404,19 @@
             _ => level
         };
     }
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts = name
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 1)
+            return parts[0][0].ToString().ToUpper();
+
+        return $"{parts[0][0]}{parts[^1][0]}".ToUpper();
+    }
+
 }

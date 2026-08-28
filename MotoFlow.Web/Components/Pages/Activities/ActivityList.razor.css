@@ -1,20 +1,891 @@
-﻿.modal {
-    z-index: 1055;
+﻿/* =========================================================
+   PÁGINA
+   ========================================================= */
+
+.activity-page {
+    width: 100%;
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 4px 0 32px;
+    box-sizing: border-box;
 }
 
-.modal-backdrop {
-    z-index: 1050;
+
+/* =========================================================
+   CABEÇALHO
+   ========================================================= */
+
+.activity-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 22px;
 }
+
+.breadcrumb-area {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 8px;
+    color: #9aa1a8;
+    font-size: 10px;
+}
+
+    .breadcrumb-area i {
+        font-size: 8px;
+    }
+
+    .breadcrumb-area .current {
+        color: #6c757d;
+    }
+
+.activity-title {
+    margin: 0;
+    color: #212529;
+    font-size: 26px;
+    font-weight: 700;
+}
+
+.activity-subtitle {
+    margin: 5px 0 0;
+    color: #7b858e;
+    font-size: 13px;
+}
+
+.activity-create-button {
+    height: 39px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 15px;
+    border-radius: 7px;
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 2px 5px rgba(25, 135, 84, 0.16);
+}
+
+    .activity-create-button i {
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   CARD PRINCIPAL
+   ========================================================= */
+
+.calendar-card {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e6e9ec;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(33, 37, 41, 0.04);
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   CABEÇALHO DO CALENDÁRIO
+   ========================================================= */
+
+.calendar-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 17px 20px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+.calendar-title-area {
+    display: flex;
+    align-items: center;
+}
+
+.calendar-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 13px;
+    border-radius: 8px;
+    background-color: #e9f6ef;
+    color: #198754;
+    font-size: 15px;
+}
+
+.calendar-title-area h5 {
+    margin: 0;
+    color: #343a40;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.calendar-title-area span {
+    display: block;
+    margin-top: 3px;
+    color: #929aa2;
+    font-size: 10px;
+}
+
+.calendar-legend {
+    display: flex;
+    align-items: center;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #7b858e;
+    font-size: 10px;
+}
+
+.legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background-color: #198754;
+}
+
+
+/* =========================================================
+   CORPO DO CALENDÁRIO
+   ========================================================= */
+
+.calendar-body {
+    width: 100%;
+    padding: 18px 20px 20px;
+    box-sizing: border-box;
+}
+
+.activity-calendar {
+    width: 100%;
+    min-height: 700px;
+    box-sizing: border-box;
+}
+
+
+/* =========================================================
+   FULLCALENDAR
+   ========================================================= */
+
+::deep .activity-calendar .fc {
+    --fc-border-color: #edf0f2;
+    --fc-page-bg-color: #ffffff;
+    --fc-neutral-bg-color: #f8f9fa;
+    --fc-list-event-hover-bg-color: #f4f7f5;
+    --fc-today-bg-color: rgba(25, 135, 84, 0.045);
+    width: 100%;
+    color: #343a40;
+    font-family: inherit;
+    font-size: 11px;
+}
+
+::deep .activity-calendar .fc-toolbar {
+    margin-bottom: 18px !important;
+}
+
+::deep .activity-calendar .fc-toolbar-title {
+    color: #343a40;
+    font-size: 18px;
+    font-weight: 650;
+}
+
+    /*
+   Capitaliza apenas a primeira letra do mês.
+   Exemplo:
+   "agosto de 2026"
+   ->
+   "Agosto de 2026"
+*/
+
+    ::deep .activity-calendar .fc-toolbar-title::first-letter {
+        text-transform: uppercase;
+    }
+
+::deep .activity-calendar .fc-button {
+    border: 1px solid #dee2e6;
+    background-color: #ffffff;
+    color: #495057;
+    font-size: 10px;
+    font-weight: 600;
+    box-shadow: none;
+    transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+    ::deep .activity-calendar .fc-button:hover {
+        border-color: #c8ced3;
+        background-color: #f5f6f7;
+        color: #212529;
+    }
+
+::deep .activity-calendar .fc-button-primary:not(:disabled).fc-button-active,
+::deep .activity-calendar .fc-button-primary:not(:disabled):active {
+    border-color: #198754;
+    background-color: #198754;
+    color: #ffffff;
+    box-shadow: none;
+}
+
+::deep .activity-calendar .fc-button-primary:focus {
+    box-shadow: none;
+}
+
+::deep .activity-calendar .fc-prev-button,
+::deep .activity-calendar .fc-next-button {
+    width: 34px;
+}
+
+::deep .activity-calendar .fc-today-button {
+    margin-left: 5px;
+}
+
+
+/* =========================================================
+   CABEÇALHO DOS DIAS
+   ========================================================= */
+
+::deep .activity-calendar .fc-col-header-cell {
+    padding: 9px 0;
+    background-color: #fafbfc;
+}
+
+::deep .activity-calendar .fc-col-header-cell-cushion {
+    color: #7b858e;
+    font-size: 10px;
+    font-weight: 650;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+
+/* =========================================================
+   CÉLULAS
+   ========================================================= */
+
+::deep .activity-calendar .fc-daygrid-day-number {
+    padding: 7px 8px;
+    color: #6c757d;
+    font-size: 10px;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+::deep .activity-calendar .fc-day-today .fc-daygrid-day-number {
+    width: 25px;
+    height: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 4px;
+    padding: 0;
+    border-radius: 50%;
+    background-color: #198754;
+    color: #ffffff;
+}
+
+::deep .activity-calendar .fc-daygrid-day {
+    transition: background-color 0.15s ease;
+}
+
+    ::deep .activity-calendar .fc-daygrid-day:hover {
+        background-color: #fafcfb;
+    }
+
+
+/* =========================================================
+   EVENTOS
+   ========================================================= */
+
+::deep .activity-calendar .fc-event {
+    margin: 2px 4px;
+    padding: 3px 6px;
+    border: none;
+    border-radius: 4px;
+    background-color: #198754;
+    box-shadow: none;
+    cursor: pointer;
+}
+
+    ::deep .activity-calendar .fc-event:hover {
+        background-color: #157347;
+    }
+
+::deep .activity-calendar .fc-event-title {
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+::deep .activity-calendar .fc-event-time {
+    color: rgba(255, 255, 255, 0.85);
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   LOADING
+   ========================================================= */
+
+.activity-loading {
+    min-height: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+    .activity-loading .spinner-border {
+        width: 28px;
+        height: 28px;
+        margin-bottom: 5px;
+    }
+
+    .activity-loading strong {
+        color: #495057;
+        font-size: 12px;
+    }
+
+    .activity-loading span {
+        color: #9aa1a8;
+        font-size: 10px;
+    }
+
+
+/* =========================================================
+   ERRO
+   ========================================================= */
+
+.activity-error {
+    display: flex;
+    align-items: flex-start;
+    padding: 18px 20px;
+    border: 1px solid #f1caca;
+    border-radius: 9px;
+    background-color: #fff8f8;
+    color: #842029;
+}
+
+.activity-error-icon {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 12px;
+    border-radius: 7px;
+    background-color: #f8d7da;
+    color: #dc3545;
+}
+
+.activity-error strong {
+    font-size: 12px;
+}
+
+.activity-error p {
+    margin: 4px 0 0;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   MODAIS
+   ========================================================= */
+
+.activity-modal .modal-content {
+    overflow: hidden;
+    border: 1px solid #e4e7eb;
+    border-radius: 11px;
+    box-shadow: 0 15px 45px rgba(0, 0, 0, 0.12);
+}
+
+.activity-modal .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+.modal-heading {
+    display: flex;
+    align-items: center;
+}
+
+.modal-icon {
+    width: 38px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.create-icon,
+.details-icon {
+    background-color: #e9f6ef;
+    color: #198754;
+}
+
+.delete-icon {
+    background-color: #fff0f1;
+    color: #dc3545;
+}
+
+.modal-heading h5 {
+    margin: 0;
+    color: #343a40;
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.modal-heading span {
+    display: block;
+    margin-top: 3px;
+    color: #929aa2;
+    font-size: 10px;
+}
+
+.activity-modal .modal-body {
+    padding: 22px 24px;
+}
+
+.activity-modal .modal-footer {
+    padding: 14px 20px;
+    border-top: 1px solid #edf0f2;
+    background-color: #fafbfc;
+}
+
+
+/* =========================================================
+   FORMULÁRIOS
+   ========================================================= */
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 7px;
+    color: #495057;
+    font-size: 10px;
+    font-weight: 650;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+::deep .input-wrapper > i {
+    position: absolute;
+    left: 13px;
+    top: 50%;
+    color: #9aa1a8;
+    font-size: 12px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 2;
+}
+
+::deep .input-wrapper .form-control {
+    min-height: 40px;
+    padding-left: 38px;
+    border: 1px solid #dee2e6;
+    border-radius: 7px;
+    color: #343a40;
+    font-size: 11px;
+    box-shadow: none;
+}
+
+::deep .input-wrapper textarea.form-control {
+    min-height: 85px;
+    padding-top: 11px;
+}
+
+::deep .input-wrapper textarea + i {
+    top: 15px;
+    transform: none;
+}
+
+::deep .input-wrapper .form-control::placeholder {
+    color: #adb5bd;
+}
+
+::deep .input-wrapper .form-control:focus {
+    border-color: #198754;
+    box-shadow: 0 0 0 3px rgba(25, 135, 84, 0.08);
+}
+
+
+/* =========================================================
+   ERRO DE FORMULÁRIO
+   ========================================================= */
+
+.form-error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 12px;
+    margin-bottom: 18px;
+    border: 1px solid #f1caca;
+    border-radius: 7px;
+    background-color: #fff8f8;
+    color: #b02a37;
+    font-size: 10px;
+}
+
+    .form-error i {
+        font-size: 13px;
+    }
+
+
+/* =========================================================
+   MEMBROS RESPONSÁVEIS
+   ========================================================= */
 
 .responsible-members {
-    max-height: 200px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 7px;
+    max-height: 180px;
     overflow-y: auto;
-    border: 1px solid #dee2e6;
-    border-radius: 8px;
-    padding: 0.75rem;
+    padding: 3px;
 }
 
-    .responsible-members .form-check {
-        padding-top: 0.4rem;
-        padding-bottom: 0.4rem;
+.member-checkbox {
+    min-height: 38px;
+    display: flex;
+    align-items: center;
+    padding: 7px 10px;
+    border: 1px solid #e4e7eb;
+    border-radius: 7px;
+    background-color: #ffffff;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+
+    .member-checkbox:hover {
+        border-color: #b8c9bf;
+        background-color: #f8fbf9;
     }
+
+    .member-checkbox input {
+        position: absolute;
+        opacity: 0;
+        pointer-events: none;
+    }
+
+.member-checkmark {
+    width: 17px;
+    height: 17px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    color: transparent;
+    font-size: 10px;
+    transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+.member-checkbox input:checked + .member-checkmark {
+    border-color: #198754;
+    background-color: #198754;
+    color: #ffffff;
+}
+
+.member-name {
+    overflow: hidden;
+    color: #495057;
+    font-size: 10px;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.members-loading,
+.empty-members {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 38px;
+    padding: 9px 11px;
+    border: 1px dashed #dee2e6;
+    border-radius: 7px;
+    color: #8a939c;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   BOTÕES DO MODAL
+   ========================================================= */
+
+.modal-cancel-button,
+.modal-save-button,
+.modal-delete-button {
+    height: 36px;
+    padding: 0 13px;
+    border-radius: 7px;
+    font-size: 10px;
+    font-weight: 600;
+}
+
+    .modal-save-button i,
+    .modal-delete-button i {
+        margin-right: 5px;
+    }
+
+    .modal-save-button .spinner-border,
+    .modal-delete-button .spinner-border {
+        width: 12px;
+        height: 12px;
+        margin-right: 5px;
+    }
+
+
+/* =========================================================
+   DETALHES DA ATIVIDADE
+   ========================================================= */
+
+.activity-detail-title {
+    padding-bottom: 16px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+    .activity-detail-title h4 {
+        margin: 0;
+        color: #212529;
+        font-size: 18px;
+        font-weight: 700;
+    }
+
+.detail-section {
+    margin-bottom: 19px;
+}
+
+    .detail-section:last-child {
+        margin-bottom: 0;
+    }
+
+.detail-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-bottom: 7px;
+    color: #6c757d;
+    font-size: 10px;
+    font-weight: 650;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+    .detail-label i {
+        color: #198754;
+        font-size: 12px;
+    }
+
+.detail-content {
+    color: #495057;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.detail-period {
+    display: flex;
+    align-items: center;
+    padding: 12px;
+    border: 1px solid #e7eaed;
+    border-radius: 8px;
+    background-color: #fafbfc;
+}
+
+    .detail-period > div:not(.period-arrow) {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+    }
+
+    .detail-period span {
+        margin-bottom: 4px;
+        color: #9aa1a8;
+        font-size: 9px;
+    }
+
+    .detail-period strong {
+        color: #343a40;
+        font-size: 10px;
+    }
+
+.period-arrow {
+    padding: 0 12px;
+    color: #198754;
+    font-size: 12px;
+}
+
+.activity-members {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.activity-member {
+    display: flex;
+    align-items: center;
+    padding: 7px 9px;
+    border: 1px solid #e7eaed;
+    border-radius: 7px;
+}
+
+.member-avatar {
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 8px;
+    border-radius: 50%;
+    background-color: #e9f6ef;
+    color: #198754;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.activity-member span:last-child {
+    color: #495057;
+    font-size: 10px;
+}
+
+.detail-empty {
+    padding: 10px;
+    border: 1px dashed #dee2e6;
+    border-radius: 7px;
+    color: #929aa2;
+    font-size: 10px;
+}
+
+
+/* =========================================================
+   CONFIRMAÇÃO DE EXCLUSÃO
+   ========================================================= */
+
+.delete-confirmation {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border: 1px solid #f1caca;
+    border-radius: 8px;
+    background-color: #fff8f8;
+}
+
+.delete-warning-icon {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    margin-right: 12px;
+    border-radius: 50%;
+    background-color: #f8d7da;
+    color: #dc3545;
+    font-size: 14px;
+}
+
+.delete-confirmation p {
+    margin: 0;
+    color: #495057;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.delete-confirmation strong {
+    color: #212529;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .activity-page {
+        max-width: 100%;
+        padding: 0 0 24px;
+    }
+
+    .activity-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .activity-title {
+        font-size: 22px;
+    }
+
+    .activity-create-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .calendar-card-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .calendar-body {
+        padding: 12px;
+    }
+
+    ::deep .activity-calendar .fc-toolbar {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    ::deep .activity-calendar .fc-toolbar-chunk {
+        display: flex;
+        justify-content: center;
+    }
+
+    .responsible-members {
+        grid-template-columns: 1fr;
+    }
+
+    .detail-period {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .period-arrow {
+        padding: 0;
+        transform: rotate(90deg);
+        align-self: center;
+    }
+}
+
+@media (max-width: 576px) {
+
+    .activity-modal .modal-body {
+        padding: 18px;
+    }
+
+    .activity-modal .modal-footer {
+        flex-direction: column-reverse;
+        gap: 7px;
+    }
+
+    .modal-cancel-button,
+    .modal-save-button,
+    .modal-delete-button {
+        width: 100%;
+    }
+}

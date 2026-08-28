@@ -1,21 +1,154 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="layout">
+<div class="app-layout">
 
+    <!-- Sidebar -->
     <aside class="sidebar">
-        <nav class="menu">
 
-            <h3>MotoFlow</h3>
+        <div class="sidebar-header">
+            <div class="brand-icon">
+                <i class="bi bi-speedometer2"></i>
+            </div>
 
-            <a href="dashboard">Dashboard</a>
-            <a href="members">Membros</a>
-            <a href="activities">Atividades</a>
+            <div class="brand-content">
+                <span class="brand-name">MotoFlow</span>
+                <span class="brand-subtitle">Gestão de Motoclube</span>
+            </div>
+        </div>
+
+        <div class="sidebar-divider"></div>
+
+        <nav class="sidebar-nav">
+
+            <span class="nav-section-title">
+                PRINCIPAL
+            </span>
+
+            <NavLink href="/dashboard"
+                     Match="NavLinkMatch.All"
+                     class="nav-item">
+
+                <i class="bi bi-grid-1x2-fill"></i>
+
+                <span>Dashboard</span>
+
+            </NavLink>
+
+            <NavLink href="/members"
+                     class="nav-item">
+
+                <i class="bi bi-people-fill"></i>
+
+                <span>Membros</span>
+
+            </NavLink>
+
+            <NavLink href="/activities"
+                     class="nav-item">
+
+                <i class="bi bi-calendar-event-fill"></i>
+
+                <span>Atividades</span>
+
+            </NavLink>
+
+            <span class="nav-section-title nav-section-spaced">
+                ADMINISTRAÇÃO
+            </span>
+
+            <NavLink href="/fees"
+                     class="nav-item">
+
+                <i class="bi bi-cash-stack"></i>
+
+                <span>Mensalidades</span>
+
+            </NavLink>
 
         </nav>
+
+        <div class="sidebar-footer">
+
+            <div class="footer-divider"></div>
+
+            <div class="project-info">
+
+                <div class="project-icon">
+                    <i class="bi bi-mortarboard-fill"></i>
+                </div>
+
+                <div>
+                    <span class="project-title">MotoFlow</span>
+                    <span class="project-subtitle">TCC II</span>
+                </div>
+
+            </div>
+
+        </div>
+
     </aside>
 
-    <main class="content">
-        @Body
-    </main>
+
+    <!-- Main Area -->
+    <div class="main-area">
+
+        <!-- Topbar -->
+        <header class="topbar">
+
+            <div class="topbar-left">
+
+                <span class="page-system-name">
+                    Sistema de Gestão
+                </span>
+
+            </div>
+
+            <div class="topbar-right">
+
+                <button class="topbar-button"
+                        type="button"
+                        title="Notificações">
+
+                    <i class="bi bi-bell"></i>
+
+                </button>
+
+                <div class="topbar-divider"></div>
+
+                <div class="user-profile">
+
+                    <div class="user-avatar">
+                        VS
+                    </div>
+
+                    <div class="user-info">
+
+                        <span class="user-name">
+                            Victor Sampaio
+                        </span>
+
+                        <span class="user-role">
+                            Administrador
+                        </span>
+
+                    </div>
+
+                    <i class="bi bi-chevron-down user-chevron"></i>
+
+                </div>
+
+            </div>
+
+        </header>
+
+
+        <!-- Page Content -->
+        <main class="page-content">
+
+            @Body
+
+        </main>
+
+    </div>
 
 </div>

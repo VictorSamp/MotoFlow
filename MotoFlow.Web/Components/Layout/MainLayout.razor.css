@@ -1,20 +1,439 @@
-#blazor-error-ui {
-    color-scheme: light only;
-    background: lightyellow;
-    bottom: 0;
-    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
-    box-sizing: border-box;
-    display: none;
-    left: 0;
-    padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+/* =========================================================
+   LAYOUT PRINCIPAL
+   ========================================================= */
+
+.app-layout {
+    min-height: 100vh;
+    background-color: #f4f6f9;
+}
+
+
+/* =========================================================
+   SIDEBAR
+   ========================================================= */
+
+.sidebar {
     position: fixed;
-    width: 100%;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 215px;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 14px;
+    background-color: #1f2429;
+    color: #ffffff;
     z-index: 1000;
 }
 
-    #blazor-error-ui .dismiss {
-        cursor: pointer;
-        position: absolute;
-        right: 0.75rem;
-        top: 0.5rem;
+
+/* =========================================================
+   CABEÇALHO / LOGO
+   ========================================================= */
+
+.sidebar-header {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0 4px;
+}
+
+.brand-icon {
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #198754;
+    border-radius: 8px;
+    color: #ffffff;
+    font-size: 17px;
+}
+
+.brand-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+.brand-name {
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.brand-subtitle {
+    margin-top: 3px;
+    color: #8f9aa5;
+    font-size: 9px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+
+/* =========================================================
+   DIVISOR DA SIDEBAR
+   ========================================================= */
+
+.sidebar-divider {
+    height: 1px;
+    margin: 20px 0 20px;
+    background-color: #343a40;
+}
+
+
+/* =========================================================
+   NAVEGAÇÃO
+   ========================================================= */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-section-title {
+    display: block;
+    padding: 0 10px;
+    margin-bottom: 8px;
+    color: #78838e;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.nav-section-spaced {
+    margin-top: 22px;
+}
+
+
+/*
+   IMPORTANTE:
+   ::deep é necessário porque NavLink é um componente
+   separado do Blazor e o CSS Isolation não entra nele
+   normalmente.
+*/
+
+::deep .nav-item {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 42px;
+    padding: 0 10px;
+    margin-bottom: 4px;
+    border-radius: 7px;
+    color: #b8c0c8;
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    ::deep .nav-item i {
+        flex: 0 0 22px;
+        width: 22px;
+        margin-right: 10px;
+        color: #8f9aa5;
+        font-size: 15px;
+        text-align: center;
+        transition: color 0.15s ease;
     }
+
+    ::deep .nav-item:hover {
+        background-color: #2b3036;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+        ::deep .nav-item:hover i {
+            color: #ffffff;
+        }
+
+    ::deep .nav-item.active {
+        background-color: #198754;
+        color: #ffffff;
+        text-decoration: none;
+    }
+
+        ::deep .nav-item.active i {
+            color: #ffffff;
+        }
+
+
+/* =========================================================
+   RODAPÉ DA SIDEBAR
+   ========================================================= */
+
+.sidebar-footer {
+    margin-top: auto;
+}
+
+.footer-divider {
+    height: 1px;
+    margin-bottom: 18px;
+    background-color: #343a40;
+}
+
+.project-info {
+    display: flex;
+    align-items: center;
+    padding: 0 4px;
+}
+
+.project-icon {
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9px;
+    border-radius: 8px;
+    background-color: #2b3036;
+    color: #cbd1d6;
+    font-size: 13px;
+}
+
+.project-info > div:last-child {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.project-title {
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.project-subtitle {
+    margin-top: 2px;
+    color: #78838e;
+    font-size: 9px;
+}
+
+
+/* =========================================================
+   ÁREA PRINCIPAL
+   ========================================================= */
+
+.main-area {
+    min-height: 100vh;
+    margin-left: 215px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* =========================================================
+   TOPBAR
+   ========================================================= */
+
+.topbar {
+    height: 56px;
+    flex: 0 0 56px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #e4e7eb;
+}
+
+.topbar-left {
+    display: flex;
+    align-items: center;
+}
+
+.page-system-name {
+    color: #6c757d;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+.topbar-right {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.topbar-button {
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: none;
+    background-color: transparent;
+    color: #6c757d;
+    font-size: 15px;
+    border-radius: 7px;
+    cursor: pointer;
+    transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+    .topbar-button:hover {
+        background-color: #f1f3f5;
+        color: #343a40;
+    }
+
+.topbar-divider {
+    width: 1px;
+    height: 26px;
+    margin: 0 16px;
+    background-color: #e4e7eb;
+}
+
+
+/* =========================================================
+   PERFIL DO USUÁRIO
+   ========================================================= */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    cursor: default;
+}
+
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 9px;
+    border-radius: 50%;
+    background-color: #198754;
+    color: #ffffff;
+    font-size: 10px;
+    font-weight: 700;
+}
+
+.user-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    color: #343a40;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.user-role {
+    margin-top: 2px;
+    color: #8a939c;
+    font-size: 9px;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.user-chevron {
+    margin-left: 14px;
+    color: #8a939c;
+    font-size: 11px;
+}
+
+
+/* =========================================================
+   CONTEÚDO DAS PÁGINAS
+   ========================================================= */
+
+.page-content {
+    flex: 1;
+    min-width: 0;
+    padding: 32px;
+}
+
+
+/* =========================================================
+   RESPONSIVIDADE
+   ========================================================= */
+
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 70px;
+        padding: 20px 10px;
+    }
+
+    .sidebar-header {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .brand-content {
+        display: none;
+    }
+
+    .sidebar-divider {
+        margin: 20px 0;
+    }
+
+    .nav-section-title {
+        display: none;
+    }
+
+    ::deep .nav-item {
+        justify-content: center;
+        padding: 0;
+    }
+
+        ::deep .nav-item i {
+            margin-right: 0;
+        }
+
+        ::deep .nav-item span {
+            display: none;
+        }
+
+    .project-info {
+        justify-content: center;
+    }
+
+        .project-info > div:last-child {
+            display: none;
+        }
+
+    .project-icon {
+        margin-right: 0;
+    }
+
+    .main-area {
+        margin-left: 70px;
+    }
+
+    .topbar {
+        padding: 0 16px;
+    }
+
+    .page-system-name {
+        display: none;
+    }
+
+    .topbar-divider {
+        margin: 0 10px;
+    }
+
+    .user-info {
+        display: none;
+    }
+
+    .user-chevron {
+        margin-left: 8px;
+    }
+
+    .page-content {
+        padding: 20px;
+    }
+}

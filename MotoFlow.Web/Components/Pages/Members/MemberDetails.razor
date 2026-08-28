@@ -9,129 +9,554 @@
 
 @rendermode InteractiveServer
 
-<h3>Informações do Membro</h3>
+<PageTitle>@(member?.Name ?? "Membro") | MotoFlow</PageTitle>
 
-@if (member is null)
-{
-    <p>Carregando...</p>
-}
-else
-{
-    <div>
-        <p><b>Nome:</b> @member.Name</p>
-        <p><b>Email:</b> @member.Email</p>
-        <p><b>Telefone:</b> @member.PhoneNumber</p>
-        <p><b>Nível da Insígnia:</b> @member.CurrentPatchLevel</p>
-        <p><b>Data de Ingresso:</b> @member.JoinDate</p>
+<div class="member-details-page">
 
-        @if (progressionError is not null)
-        {
-            <div class="alert alert-danger">
-                @progressionError
+    @if (member is null)
+    {
+        <div class="details-loading">
+
+            <div class="spinner-border text-success"
+                 role="status">
             </div>
-        }
 
-        @if (member.Status == MemberStatus.Active && AvailablePatchLevels.Any())
-        {
-            <div class="mb-4">
-                <label class="form-label">
-                    Progredir nível da insígnia
-                </label>
-
-                <div class="d-flex gap-2">
-                    <InputSelect class="form-select"
-                                 @bind-Value="selectedPatchLevel">
-
-                        @foreach (var level in AvailablePatchLevels)
-                        {
-                            <option value="@level">
-                                @level
-                            </option>
-                        }
-
-                    </InputSelect>
-
-                    <button type="button"
-                            class="btn btn-primary"
-                            @onclick="ProgressMember">
-                        Progredir
-                    </button>
-                </div>
-            </div>
-        }
-        else if (member.Status == MemberStatus.Active)
-        {
-            <p class="text-muted">
-                O membro já possui a insígnia completa.
+            <p>
+                Carregando informações do membro...
             </p>
-        }
 
-        <hr />
+        </div>
+    }
+    else
+    {
+        <!-- =========================================
+             CABEÇALHO
+             ========================================= -->
 
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h4 class="mb-0">Mensalidades</h4>
+        <div class="details-header">
 
-            <button type="button"
-                    class="btn btn-success"
-                    @onclick="OpenCreateFeeModal">
-                + Adicionar mensalidade
-            </button>
+            <div>
+
+                <div class="breadcrumb-area">
+
+                    <span>
+                        Membros
+                    </span>
+
+                    <i class="bi bi-chevron-right"></i>
+
+                    <span class="current">
+                        Detalhes
+                    </span>
+
+                </div>
+
+                <h1>
+                    Informações do Membro
+                </h1>
+
+                <p>
+                    Visualize e gerencie as informações do integrante.
+                </p>
+
+            </div>
+
         </div>
 
-        @if (member.MembershipFees is null || !member.MembershipFees.Any())
-        {
-            <p>Nenhuma mensalidade encontrada.</p>
-        }
-        else
-        {
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Competência</th>
-                        <th>Valor</th>
-                        <th>Status</th>
-                        <th>Data de Pagamento</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
 
-                <tbody>
-                    @foreach (var fee in member.MembershipFees)
+        <!-- =========================================
+             PERFIL
+             ========================================= -->
+
+        <div class="member-profile-card">
+
+            <div class="profile-main">
+
+                <div class="large-avatar">
+                    @GetInitials(member.Name)
+                </div>
+
+                <div class="profile-info">
+
+                    <h2>
+                        @member.Name
+                    </h2>
+
+                    <div class="profile-status">
+
+                        @if (member.Status == MemberStatus.Active)
+                        {
+                            <span class="status-badge active">
+                                <span></span>
+                                Ativo
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="status-badge inactive">
+                                <span></span>
+                                Inativo
+                            </span>
+                        }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="profile-patch">
+
+                <div class="patch-icon">
+                    <i class="bi bi-award-fill"></i>
+                </div>
+
+                <div>
+
+                    <span>
+                        Insígnia atual
+                    </span>
+
+                    <strong>
+                        @TranslatePatch(member.CurrentPatchLevel)
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             INFORMAÇÕES
+             ========================================= -->
+
+        <div class="details-grid">
+
+            <div class="details-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h5>
+                            Informações pessoais
+                        </h5>
+
+                        <span>
+                            Dados cadastrais do membro
+                        </span>
+
+                    </div>
+
+                    <div class="panel-icon">
+                        <i class="bi bi-person-vcard-fill"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="information-list">
+
+                    <div class="information-item">
+
+                        <div class="information-icon">
+                            <i class="bi bi-person"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Nome completo
+                            </span>
+
+                            <strong>
+                                @member.Name
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="information-item">
+
+                        <div class="information-icon">
+                            <i class="bi bi-envelope"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Email
+                            </span>
+
+                            <strong>
+                                @member.Email
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="information-item">
+
+                        <div class="information-icon">
+                            <i class="bi bi-telephone"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Telefone
+                            </span>
+
+                            <strong>
+                                @member.PhoneNumber
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="information-item">
+
+                        <div class="information-icon">
+                            <i class="bi bi-calendar3"></i>
+                        </div>
+
+                        <div>
+
+                            <span>
+                                Data de ingresso
+                            </span>
+
+                            <strong>
+                                @member.JoinDate.ToString("dd/MM/yyyy")
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================================
+                 PROGRESSÃO
+                 ========================================= -->
+
+            <div class="details-panel">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h5>
+                            Progressão
+                        </h5>
+
+                        <span>
+                            Evolução da insígnia do membro
+                        </span>
+
+                    </div>
+
+                    <div class="panel-icon">
+                        <i class="bi bi-award-fill"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="progression-content">
+
+                    <div class="current-patch">
+
+                        <span>
+                            Nível atual
+                        </span>
+
+                        <strong>
+                            @TranslatePatch(member.CurrentPatchLevel)
+                        </strong>
+
+                    </div>
+
+
+                    @if (progressionError is not null)
                     {
-                        <tr>
-                            <td>
-                                @fee.ReferencePeriod.ToString("MM/yyyy")
-                            </td>
-
-                            <td>
-                                @fee.Amount.ToString("C")
-                            </td>
-
-                            <td>
-                                @fee.Status
-                            </td>
-
-                            <td>
-                                @(fee.PaymentDate.HasValue
-                                    ? fee.PaymentDate.Value.ToString("dd/MM/yyyy")
-                                    : "-")
-                            </td>
-
-                            <td>
-                                <button type="button"
-                                        class="btn btn-sm btn-danger"
-                                        @onclick="() => OpenDeleteFeeModal(fee.Id)">
-                                    Remover
-                                </button>
-                            </td>
-                        </tr>
+                        <div class="alert alert-danger progression-error">
+                            @progressionError
+                        </div>
                     }
-                </tbody>
-            </table>
-        }
-    </div>
-}
 
+
+                    @if (member.Status == MemberStatus.Active &&
+                         AvailablePatchLevels.Any())
+                    {
+                        <div class="progression-form">
+
+                            <label class="form-label">
+                                Próximo nível
+                            </label>
+
+                            <div class="progression-controls">
+
+                                <InputSelect class="form-select"
+                                             @bind-Value="selectedPatchLevel">
+
+                                    @foreach (var level in AvailablePatchLevels)
+                                    {
+                                        <option value="@level">
+                                            @TranslatePatch(level)
+                                        </option>
+                                    }
+
+                                </InputSelect>
+
+                                <button type="button"
+                                        class="btn btn-success progression-button"
+                                        @onclick="ProgressMember">
+
+                                    <i class="bi bi-arrow-up-circle"></i>
+
+                                    Progredir
+
+                                </button>
+
+                            </div>
+
+                        </div>
+                    }
+                    else if (member.Status == MemberStatus.Active)
+                    {
+                        <div class="completed-patch">
+
+                            <i class="bi bi-check-circle-fill"></i>
+
+                            <span>
+                                O membro já possui a insígnia completa.
+                            </span>
+
+                        </div>
+                    }
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =========================================
+             MENSALIDADES
+             ========================================= -->
+
+        <div class="fees-panel">
+
+            <div class="panel-header">
+
+                <div>
+
+                    <h5>
+                        Mensalidades
+                    </h5>
+
+                    <span>
+                        Histórico financeiro do membro
+                    </span>
+
+                </div>
+
+                <button type="button"
+                        class="btn btn-success add-fee-button"
+                        @onclick="OpenCreateFeeModal">
+
+                    <i class="bi bi-plus-lg"></i>
+
+                    Adicionar mensalidade
+
+                </button>
+
+            </div>
+
+
+            @if (member.MembershipFees is null ||
+                 !member.MembershipFees.Any())
+            {
+                <div class="empty-fees">
+
+                    <div class="empty-fees-icon">
+                        <i class="bi bi-receipt"></i>
+                    </div>
+
+                    <h6>
+                        Nenhuma mensalidade encontrada
+                    </h6>
+
+                    <p>
+                        Este membro ainda não possui mensalidades cadastradas.
+                    </p>
+
+                    <button type="button"
+                            class="btn btn-success"
+                            @onclick="OpenCreateFeeModal">
+
+                        <i class="bi bi-plus-lg"></i>
+
+                        Adicionar mensalidade
+
+                    </button>
+
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+
+                    <table class="table fees-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>
+                                    Competência
+                                </th>
+
+                                <th>
+                                    Valor
+                                </th>
+
+                                <th>
+                                    Status
+                                </th>
+
+                                <th>
+                                    Data de pagamento
+                                </th>
+
+                                <th class="text-end">
+                                    Ações
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+                            @foreach (var fee in member.MembershipFees)
+                            {
+                                <tr>
+
+                                    <td>
+
+                                        <div class="reference-period">
+
+                                            <div class="period-icon">
+                                                <i class="bi bi-calendar-month"></i>
+                                            </div>
+
+                                            <strong>
+                                                @fee.ReferencePeriod.ToString("MM/yyyy")
+                                            </strong>
+
+                                        </div>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        <strong class="fee-amount">
+                                            @fee.Amount.ToString("C")
+                                        </strong>
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @if (fee.Status.ToString() == "Paid")
+                                        {
+                                            <span class="fee-status paid">
+                                                <span></span>
+                                                Pago
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="fee-status pending">
+                                                <span></span>
+                                                @fee.Status
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td>
+
+                                        @if (fee.PaymentDate.HasValue)
+                                        {
+                                            <span class="payment-date">
+
+                                                <i class="bi bi-check2-circle"></i>
+
+                                                @fee.PaymentDate.Value.ToString("dd/MM/yyyy")
+
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="no-payment">
+                                                —
+                                            </span>
+                                        }
+
+                                    </td>
+
+
+                                    <td class="text-end">
+
+                                        <button type="button"
+                                                class="action-button delete"
+                                                title="Remover mensalidade"
+                                                @onclick="() => OpenDeleteFeeModal(fee.Id)">
+
+                                            <i class="bi bi-trash3"></i>
+
+                                        </button>
+
+                                    </td>
+
+                                </tr>
+                            }
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+            }
+
+        </div>
+    }
+</div>
+
+
+<!-- =========================================
+     MODAL - NOVA MENSALIDADE
+     ========================================= -->
 @if (showCreateFeeModal)
 {
     <div class="modal-backdrop fade show"></div>
@@ -141,18 +566,37 @@ else
 
         <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-content">
+            <div class="modal-content details-modal">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        Nova mensalidade
-                    </h5>
+
+                    <div class="modal-title-wrapper">
+
+                        <div class="modal-icon success">
+                            <i class="bi bi-receipt"></i>
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Nova mensalidade
+                            </h5>
+
+                            <span>
+                                Adicionar cobrança ao membro
+                            </span>
+
+                        </div>
+
+                    </div>
 
                     <button type="button"
                             class="btn-close"
                             @onclick="CloseCreateFeeModal">
                     </button>
+
                 </div>
+
 
                 <div class="modal-body">
 
@@ -163,18 +607,29 @@ else
                         </div>
                     }
 
-                    <div class="mb-3">
+
+                    <div class="form-group">
+
                         <label class="form-label">
                             Membro
                         </label>
 
-                        <input type="text"
-                               class="form-control"
-                               value="@member?.Name"
-                               disabled />
+                        <div class="input-with-icon">
+
+                            <i class="bi bi-person"></i>
+
+                            <input type="text"
+                                   class="form-control"
+                                   value="@member?.Name"
+                                   disabled />
+
+                        </div>
+
                     </div>
 
-                    <div class="mb-3">
+
+                    <div class="form-group">
+
                         <label class="form-label">
                             Competência
                         </label>
@@ -182,42 +637,62 @@ else
                         <input type="month"
                                class="form-control"
                                @bind="feeReferencePeriod" />
+
                     </div>
 
-                    <div class="mb-3">
+
+                    <div class="form-group">
+
                         <label class="form-label">
                             Valor
                         </label>
 
-                        <input type="number"
-                               class="form-control"
-                               step="0.01"
-                               min="0"
-                               @bind="feeAmount" />
+                        <div class="input-with-icon">
+
+                            <span class="currency-symbol">
+                                R$
+                            </span>
+
+                            <input type="number"
+                                   class="form-control"
+                                   step="0.01"
+                                   min="0"
+                                   @bind="feeAmount" />
+
+                        </div>
+
                     </div>
 
                 </div>
 
+
                 <div class="modal-footer">
 
                     <button type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-light modal-cancel"
                             @onclick="CloseCreateFeeModal">
+
                         Cancelar
+
                     </button>
 
                     <button type="button"
-                            class="btn btn-success"
+                            class="btn btn-success modal-confirm"
                             @onclick="CreateFee"
                             disabled="@isCreatingFee">
 
                         @if (isCreatingFee)
                         {
-                            <span>Criando...</span>
+                            <span>
+                                Criando...
+                            </span>
                         }
                         else
                         {
-                            <span>Criar</span>
+                            <span>
+                                <i class="bi bi-check-lg"></i>
+                                Criar mensalidade
+                            </span>
                         }
 
                     </button>
@@ -231,6 +706,10 @@ else
     </div>
 }
 
+
+<!-- =========================================
+     MODAL - EXCLUSÃO DE MENSALIDADE
+     ========================================= -->
 @if (showDeleteFeeModal)
 {
     <div class="modal-backdrop fade show"></div>
@@ -240,37 +719,69 @@ else
 
         <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-content">
+            <div class="modal-content details-modal">
 
                 <div class="modal-header">
-                    <h5 class="modal-title">
-                        Confirmar exclusão
-                    </h5>
+
+                    <div class="modal-title-wrapper">
+
+                        <div class="modal-icon danger">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+
+                        <div>
+
+                            <h5>
+                                Confirmar exclusão
+                            </h5>
+
+                            <span>
+                                Remover mensalidade
+                            </span>
+
+                        </div>
+
+                    </div>
 
                     <button type="button"
                             class="btn-close"
                             @onclick="CloseDeleteFeeModal">
                     </button>
+
                 </div>
 
+
                 <div class="modal-body">
-                    <p>
+
+                    <p class="delete-message">
                         Tem certeza que deseja remover esta mensalidade?
                     </p>
+
+                    <span class="delete-warning">
+                        Essa ação não poderá ser desfeita.
+                    </span>
+
                 </div>
+
 
                 <div class="modal-footer">
 
                     <button type="button"
-                            class="btn btn-secondary"
+                            class="btn btn-light modal-cancel"
                             @onclick="CloseDeleteFeeModal">
+
                         Cancelar
+
                     </button>
 
                     <button type="button"
-                            class="btn btn-danger"
+                            class="btn btn-danger modal-confirm"
                             @onclick="ConfirmDeleteFee">
+
+                        <i class="bi bi-trash3"></i>
+
                         Sim, remover
+
                     </button>
 
                 </div>
@@ -282,10 +793,12 @@ else
     </div>
 }
 
+
 @code
 {
     [Parameter]
     public Guid Id { get; set; }
+
 
     private MemberDetailsDto? member;
 
@@ -293,26 +806,34 @@ else
 
     private string? progressionError;
 
+
     private bool showCreateFeeModal;
 
     private string? createFeeError;
 
     private bool isCreatingFee;
 
+
     private bool showDeleteFeeModal;
 
     private Guid selectedFeeId;
 
+
     private DateTime feeReferencePeriod =
-        new(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1);
+        new(
+            DateTime.UtcNow.Year,
+            DateTime.UtcNow.Month,
+            1);
 
     private decimal feeAmount = 30.00m;
+
 
     private IEnumerable<PatchLevel> AvailablePatchLevels =>
         Enum.GetValues<PatchLevel>()
             .Where(level =>
                 member is not null &&
                 level > member.CurrentPatchLevel);
+
 
     protected override async Task OnInitializedAsync()
     {
@@ -322,10 +843,13 @@ else
             AvailablePatchLevels.FirstOrDefault();
     }
 
+
     private async Task LoadMember()
     {
-        member = await MemberService.GetMemberById(Id);
+        member =
+            await MemberService.GetMemberById(Id);
     }
+
 
     private void OpenCreateFeeModal()
     {
@@ -342,33 +866,40 @@ else
         showCreateFeeModal = true;
     }
 
+
     private void CloseCreateFeeModal()
     {
         if (isCreatingFee)
             return;
 
         showCreateFeeModal = false;
+
         createFeeError = null;
     }
+
 
     private async Task CreateFee()
     {
         createFeeError = null;
+
         isCreatingFee = true;
 
         try
         {
-            var request = new CreateMembershipFeeRequest(
-                feeReferencePeriod,
-                feeAmount);
+            var request =
+                new CreateMembershipFeeRequest(
+                    feeReferencePeriod,
+                    feeAmount);
 
-            var error = await MembershipFeeService.CreateMembershipFee(
-                Id,
-                request);
+            var error =
+                await MembershipFeeService.CreateMembershipFee(
+                    Id,
+                    request);
 
             if (error is not null)
             {
                 createFeeError = error;
+
                 return;
             }
 
@@ -382,17 +913,22 @@ else
         }
     }
 
+
     private void OpenDeleteFeeModal(Guid feeId)
     {
         selectedFeeId = feeId;
+
         showDeleteFeeModal = true;
     }
+
 
     private void CloseDeleteFeeModal()
     {
         showDeleteFeeModal = false;
+
         selectedFeeId = Guid.Empty;
     }
+
 
     private async Task ConfirmDeleteFee()
     {
@@ -404,6 +940,7 @@ else
 
         CloseDeleteFeeModal();
     }
+
 
     private async Task ProgressMember()
     {
@@ -422,5 +959,39 @@ else
 
         selectedPatchLevel =
             AvailablePatchLevels.FirstOrDefault();
+    }
+
+
+    private static string TranslatePatch(PatchLevel level)
+    {
+        return level switch
+        {
+            PatchLevel.None => "Nenhuma Parte",
+            PatchLevel.FirstPatch => "Primeira Etapa",
+            PatchLevel.SecondPatch => "Segunda Etapa",
+            PatchLevel.FullPatch => "Insígnia Completa",
+            _ => level.ToString()
+        };
+    }
+
+
+    private static string GetInitials(string name)
+    {
+        if (string.IsNullOrWhiteSpace(name))
+            return "?";
+
+        var parts =
+            name.Split(
+                ' ',
+                StringSplitOptions.RemoveEmptyEntries);
+
+        if (parts.Length == 1)
+            return parts[0][0]
+                .ToString()
+                .ToUpper();
+
+        return
+            $"{parts[0][0]}{parts[^1][0]}"
+                .ToUpper();
     }
 }
