@@ -57,8 +57,9 @@ A solução segue os princípios de Clean Architecture e está dividida em cinco
 - Geração automática da primeira mensalidade ao cadastrar um membro.
 - O mês de entrada é considerado um período de adaptação; a primeira mensalidade é criada para o mês seguinte, com valor inicial de R$ 30,00.
 - Criação manual de mensalidades no detalhe do membro.
+- Visualização geral de mensalidades com filtros por status.
 - Prevenção de mensalidades duplicadas para o mesmo membro e competência.
-- Registro de pagamento e da respectiva data por meio da API.
+- Registro de pagamento e da respectiva data pela interface.
 - Exclusão lógica de mensalidades pendentes; mensalidades pagas não podem ser excluídas.
 
 ### Atividades e responsabilidades
@@ -99,7 +100,6 @@ O projeto possui testes unitários para regras de criação e progressão de mem
 ## 🔮 Evoluções futuras
 
 - Geração automática e recorrente de mensalidades para membros ativos.
-- Página financeira geral para consulta e pagamento de mensalidades pela interface.
 - Controle de mensalidades em atraso.
 - Atualização de atividades pela interface.
 - Filtros e pesquisas de membros e atividades.

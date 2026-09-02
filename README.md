@@ -40,6 +40,6 @@ The solution is organized into five projects:
 
 ## 🚀 Current Status
 
-The MVP includes member management, member progression, membership-fee management, an overview dashboard, and a calendar for activities and member responsibilities.
+The MVP includes member management, member progression, membership-fee management with a general overview, an overview dashboard, and a calendar for activities and member responsibilities.
 
 For the complete and current description, see the language-specific READMEs above.

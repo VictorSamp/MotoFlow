@@ -75,12 +75,23 @@ namespace MotoFlow.Api.Controllers
         [HttpPatch("{feeId}/pay")]
         public async Task<IActionResult> Pay(string memberId, string feeId, CancellationToken cancellationToken)
         {
-            await _payMembershipFeeUseCase.ExecuteAsync(
-                memberId,
-                feeId,
-                cancellationToken);
+            try
+            {
+                await _payMembershipFeeUseCase.ExecuteAsync(
+                    memberId,
+                    feeId,
+                    cancellationToken);
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (NotFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpDelete]
@@ -97,6 +108,10 @@ namespace MotoFlow.Api.Controllers
             catch (NotFoundException ex)
             {
                 return NotFound(ex.Message);
+            }
+            catch (BadRequestException ex)
+            {
+                return BadRequest(ex.Message);
             }
         }
     }

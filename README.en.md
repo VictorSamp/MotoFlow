@@ -57,8 +57,9 @@ The solution follows Clean Architecture principles and is organized into five pr
 - Automatic creation of the first membership fee when a member is registered.
 - The joining month is considered an adaptation period; the first fee is created for the following month, with an initial value of BRL 30.00.
 - Manual creation of membership fees from the member details page.
+- General membership-fee overview with status filters.
 - Prevention of duplicate fees for the same member and reference period.
-- Payment registration and payment-date tracking through the API.
+- Payment registration and payment-date tracking through the interface.
 - Soft deletion of pending fees; paid fees cannot be deleted.
 
 ### Activities and Responsibilities
@@ -99,7 +100,6 @@ The project includes unit tests for member-creation and progression rules, inclu
 ## 🔮 Future Improvements
 
 - Automated recurring monthly-fee generation for active members.
-- General financial page for fee review and payment through the interface.
 - Overdue-fee tracking.
 - Activity updates through the interface.
 - Member and activity search and filters.

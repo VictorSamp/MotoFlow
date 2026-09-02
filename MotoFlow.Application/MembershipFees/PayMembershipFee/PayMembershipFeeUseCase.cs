@@ -21,7 +21,14 @@ namespace MotoFlow.Application.MembershipFees.PayMembershipFee
 
             var fee = await _membershipFeeRepository.GetByIdOrThrowAsync(memberGuid, feeGuid, cancellationToken);
 
-            fee.Pay();
+            try
+            {
+                fee.Pay();
+            }
+            catch (InvalidOperationException ex)
+            {
+                throw new MotoFlow.Application.Commom.Exceptions.BadRequestException(ex.Message);
+            }
 
             await _unitOfWork.SaveChangesAsync(cancellationToken);
         }

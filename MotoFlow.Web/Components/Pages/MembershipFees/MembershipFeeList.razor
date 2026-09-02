@@ -1,0 +1,230 @@
+@page "/fees"
+
+@using System.Globalization
+@using MotoFlow.Application.MembershipFees.Dtos
+@using MotoFlow.Domain.Enums
+
+@inject MembershipFeeApiService MembershipFeeService
+
+@rendermode InteractiveServer
+
+<PageTitle>Mensalidades | MotoFlow</PageTitle>
+
+<div class="fees-page">
+    <div class="fees-header">
+        <div>
+            <h1>Mensalidades</h1>
+            <p>Acompanhe a situação das mensalidades do motoclube.</p>
+        </div>
+    </div>
+
+    @if (isLoading)
+    {
+        <div class="fees-loading">
+            <div class="spinner-border text-success" role="status"></div>
+            <p>Carregando mensalidades...</p>
+        </div>
+    }
+    else if (loadError is not null)
+    {
+        <div class="alert alert-danger" role="alert">@loadError</div>
+    }
+    else
+    {
+        <div class="fees-summary">
+            <div class="summary-card">
+                <span class="summary-label">Total de mensalidades</span>
+                <strong>@fees.Count</strong>
+            </div>
+
+            <div class="summary-card pending">
+                <span class="summary-label">Pendentes</span>
+                <strong>@fees.Count(fee => fee.Status == MembershipFeeStatus.Pending)</strong>
+            </div>
+
+            <div class="summary-card paid">
+                <span class="summary-label">Pagas</span>
+                <strong>@fees.Count(fee => fee.Status == MembershipFeeStatus.Paid)</strong>
+            </div>
+        </div>
+
+        @if (paymentError is not null)
+        {
+            <div class="alert alert-danger" role="alert">@paymentError</div>
+        }
+
+        <div class="fees-panel">
+            <div class="fees-panel-header">
+                <div>
+                    <h5>Visão geral</h5>
+                    <span>Consulte e atualize as mensalidades cadastradas.</span>
+                </div>
+
+                <div class="fees-filters" role="group" aria-label="Filtro de mensalidades">
+                    <button class="@AllFilterClass" @onclick="ShowAll">Todas</button>
+                    <button class="@PendingFilterClass" @onclick="ShowPending">Pendentes</button>
+                    <button class="@PaidFilterClass" @onclick="ShowPaid">Pagas</button>
+                </div>
+            </div>
+
+            @if (!FilteredFees.Any())
+            {
+                <div class="fees-empty">
+                    <i class="bi bi-cash-stack"></i>
+                    <h5>Nenhuma mensalidade encontrada</h5>
+                    <p>Não há mensalidades para o filtro selecionado.</p>
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table fees-table mb-0">
+                        <thead>
+                            <tr>
+                                <th>Membro</th>
+                                <th>Competência</th>
+                                <th>Valor</th>
+                                <th>Status</th>
+                                <th>Pagamento</th>
+                                <th class="text-end">Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var fee in FilteredFees)
+                            {
+                                <tr>
+                                    <td>
+                                        <a class="member-link" href="/members/@fee.MemberId">@fee.MemberName</a>
+                                    </td>
+                                    <td>@FormatReferencePeriod(fee.ReferencePeriod)</td>
+                                    <td>@fee.Amount.ToString("C", CultureInfo.GetCultureInfo("pt-BR"))</td>
+                                    <td>
+                                        <span class="status-badge @(fee.Status == MembershipFeeStatus.Paid ? "paid" : "pending")">
+                                            @(fee.Status == MembershipFeeStatus.Paid ? "Paga" : "Pendente")
+                                        </span>
+                                    </td>
+                                    <td>@(fee.PaymentDate?.ToString("dd/MM/yyyy") ?? "—")</td>
+                                    <td class="text-end">
+                                        @if (fee.Status == MembershipFeeStatus.Pending)
+                                        {
+                                            <button class="btn btn-success btn-sm pay-button"
+                                                    disabled="@(payingFeeId == fee.Id)"
+                                                    @onclick="() => PayMembershipFee(fee)">
+                                                @if (payingFeeId == fee.Id)
+                                                {
+                                                    <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                                                }
+                                                else
+                                                {
+                                                    <i class="bi bi-check-circle"></i>
+                                                    <span>Marcar como paga</span>
+                                                }
+                                            </button>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@code {
+    private List<MembershipFeeOverviewDto> fees = [];
+    private bool isLoading = true;
+    private string? loadError;
+    private string? paymentError;
+    private string selectedFilter = "all";
+    private Guid? payingFeeId;
+
+    private IEnumerable<MembershipFeeOverviewDto> FilteredFees =>
+        selectedFilter switch
+        {
+            "pending" => fees.Where(fee => fee.Status == MembershipFeeStatus.Pending),
+            "paid" => fees.Where(fee => fee.Status == MembershipFeeStatus.Paid),
+            _ => fees
+        };
+
+    private string AllFilterClass => GetFilterClass("all");
+    private string PendingFilterClass => GetFilterClass("pending");
+    private string PaidFilterClass => GetFilterClass("paid");
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadFees();
+    }
+
+    private async Task LoadFees()
+    {
+        try
+        {
+            fees = await MembershipFeeService.GetAllMembershipFees() ?? [];
+        }
+        catch (Exception ex)
+        {
+            loadError = ex.Message;
+        }
+        finally
+        {
+            isLoading = false;
+        }
+    }
+
+    private void SelectFilter(string filter)
+    {
+        selectedFilter = filter;
+    }
+
+    private void ShowAll() => SelectFilter("all");
+
+    private void ShowPending() => SelectFilter("pending");
+
+    private void ShowPaid() => SelectFilter("paid");
+
+    private async Task PayMembershipFee(MembershipFeeOverviewDto fee)
+    {
+        paymentError = null;
+        payingFeeId = fee.Id;
+
+        try
+        {
+            var error = await MembershipFeeService.PayMembershipFee(
+                fee.MemberId,
+                fee.Id);
+
+            if (error is not null)
+            {
+                paymentError = error;
+                return;
+            }
+
+            await LoadFees();
+        }
+        catch (Exception ex)
+        {
+            paymentError = ex.Message;
+        }
+        finally
+        {
+            payingFeeId = null;
+        }
+    }
+
+    private string GetFilterClass(string filter)
+    {
+        return selectedFilter == filter
+            ? "filter-button active"
+            : "filter-button";
+    }
+
+    private static string FormatReferencePeriod(DateTime referencePeriod)
+    {
+        return CultureInfo
+            .GetCultureInfo("pt-BR")
+            .TextInfo
+            .ToTitleCase(referencePeriod.ToString("MMMM 'de' yyyy", CultureInfo.GetCultureInfo("pt-BR")));
+    }
+}
