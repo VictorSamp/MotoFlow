@@ -1,6 +1,8 @@
 # 🏍️ MotoFlow
 
-ERP Web for Motorcycle Club Management
+Web ERP system for motorcycle club management, developed as a Final Year Project (TCC).
+
+MotoFlow centralizes member records, membership fees, internal responsibilities, and activities that would otherwise be managed through spreadsheets, messaging apps, and manual records.
 
 ---
 
@@ -11,37 +13,33 @@ ERP Web for Motorcycle Club Management
 
 ---
 
-## 📌 About the Project
-
-MotoFlow is an ERP system developed as a Final Year Project (TCC), focused on solving organizational and administrative problems in motorcycle clubs.
-
-The system replaces manual tools such as spreadsheets and messaging apps with a centralized web platform.
-
----
-
 ## ⚙️ Tech Stack
 
-- .NET 8 (ASP.NET Core)
+- .NET 10 / ASP.NET Core
 - C#
+- Blazor Server
+- ASP.NET Core Web API
 - Entity Framework Core
 - SQL Server
-- Blazor Server
 - Clean Architecture
-- Docker
+- Docker (SQL Server environment)
 
 ---
 
-## 📦 Architecture
+## 🏗️ Architecture
 
-The system follows Clean Architecture principles:
+The solution is organized into five projects:
 
-- Domain → Business rules and entities
-- Application → Use cases
-- Infrastructure → Database and persistence
-- Web/API → Presentation layer
+- **MotoFlow.Domain** — entities and business rules.
+- **MotoFlow.Application** — use cases, DTOs, interfaces, and application exceptions.
+- **MotoFlow.Infrastructure** — Entity Framework Core, SQL Server persistence, repositories, migrations, and Unit of Work.
+- **MotoFlow.Api** — REST API, Swagger, and dependency injection configuration.
+- **MotoFlow.Web** — Blazor Server interface that consumes the API.
 
 ---
 
-## 🚀 Status
+## 🚀 Current Status
 
-MVP under development with core member management features implemented.
+The MVP includes member management, member progression, membership-fee management, an overview dashboard, and a calendar for activities and member responsibilities.
+
+For the complete and current description, see the language-specific READMEs above.
