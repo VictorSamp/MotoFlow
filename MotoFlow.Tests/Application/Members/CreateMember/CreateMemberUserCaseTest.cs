@@ -31,6 +31,12 @@ public class CreateMemberUseCaseTests
     [Fact]
     public async Task Should_Create_Member_And_First_MembershipFee()
     {
+        var expectedReferencePeriod = new DateTime(
+            DateTime.UtcNow.Year,
+            DateTime.UtcNow.Month,
+            1)
+            .AddMonths(1);
+
         var request = new CreateMemberRequest(
                 "Victor",
                 "victor@email.com",
@@ -59,8 +65,7 @@ public class CreateMemberUseCaseTests
             x => x.AddAsync(
                 It.Is<MembershipFee>(fee =>
                     fee.Amount == 30.00m &&
-                    fee.ReferencePeriod.Month == DateTime.UtcNow.Month &&
-                    fee.ReferencePeriod.Year == DateTime.UtcNow.Year),
+                    fee.ReferencePeriod == expectedReferencePeriod),
                 It.IsAny<CancellationToken>()),
             Times.Once);
 

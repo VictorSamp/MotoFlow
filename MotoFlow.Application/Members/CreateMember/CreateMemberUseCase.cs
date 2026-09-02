@@ -38,7 +38,8 @@ namespace MotoFlow.Application.Members.CreateMember
             var referencePeriod = new DateTime(
                 DateTime.UtcNow.Year,
                 DateTime.UtcNow.Month,
-                1);
+                1)
+                .AddMonths(1);
 
             var firstFee = new MembershipFee(
                 member.Id,
